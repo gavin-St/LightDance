@@ -1,0 +1,31 @@
+html, body {
+    margin: 0;
+    height: 100%;
+  }
+#app {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+#title {
+	position: absolute;
+	top: 70px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display: block;
+    color: white;
+	font-family: "OCR A Std", monospace;
+	font-size: 80px;
+}
+#exit {
+	color: white;
+    display: block;
+	font-family: "OCR A Std", monospace;
+	font-size: 40px;
+    position: absolute;
+	top: 260px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+}
