@@ -26,10 +26,11 @@ const targetRadius = 3;
 const makeBlockButton = document.querySelector("#move_block");
 
 class Block {
-    constructor(mesh, direction, targetable) {
+    constructor(mesh, direction, targetable, breakable) {
         this.mesh = mesh;
         this.direction = direction;
         this.targetable = targetable;
+        this.breakable = breakable;
     }
 }
 
@@ -48,9 +49,31 @@ function generatePoint(r) {
     return tuple;
 }
 
+function rotatePoint(x, y, centerX, centerY, angle) {
+    //rotate (x,y) around (centerX, centerY) by angle radians
+
+    const c = Math.cos(angle);
+    const s = Math.sin(angle);
+
+    //subtract center to make this equivalent to rotating around origin
+    x -= centerX;
+    y -= centerY;
+
+    let newX = x * c - y * s;
+    let newY = x * s + y * c;
+
+    //add back center
+    newX += centerX;
+    newY += centerY;
+
+    return [newX, newY];
+}
+
 function makeCube(x = 0, y = 0, rotation = 0) {
     activeCubes.push();
-    activeCubes.push(new Block(new THREE.Mesh(blockGeometry, blockMaterial), 0, false));
+    activeCubes.push(new Block(new THREE.Mesh(blockGeometry, blockMaterial), Math.floor(Math.random() * 3), false, false));
+    console.log(`direction: ${activeCubes.at(-1).direction}`);
+    console.log(`rotation: ${rotation}`);
     //cubesTargetable.push(false);
     numCubes++;
 
@@ -65,7 +88,7 @@ function makeCube(x = 0, y = 0, rotation = 0) {
 function moveAllCubes() {
     //console.log(activeCubes);
     for (let i = 0; i < numCubes; i++) {
-        activeCubes[i].mesh.position.z += 0.1;
+        activeCubes[i].mesh.position.z += 0.05;
     }
 }
 
@@ -134,10 +157,21 @@ function checkPlaneIntersections() {
             // console.log("BLOCK POSITION: x: " + curXPos + " y: " + curYPos);
             // console.log("X Pos on Plane: " + (cursorX / windowWidth - 0.5) * planeWidth);
             // console.log("Y Pos on Plane: " + (-cursorY / windowHeight + 0.5) * planeHeight);
-            if (Math.abs(curXPos - (getX(cursorX))) <= 3 && 
-                Math.abs(curYPos - (getY(cursorY))) <= 3) {
-                console.log("DESTROYED BLOCK");
-                destroyBlock(i, true);
+            const rotated = rotatePoint(getX(cursorX), getY(cursorY), curXPos, curYPos, -activeCubes[i].mesh.rotation.z);
+            const x = rotated[0];
+            const y = rotated[1];
+            const direction = activeCubes[i].direction;
+            //check if it passed through the entire block
+            if(activeCubes[i].breakable) {
+                if(activeCubes[i].direction == 0 && y < curYPos - blockSize / 2) {
+                    destroyBlock(i, true);
+                } else if(activeCubes[i].direction == 1 && x < curXPos - blockSize / 2) {
+                    destroyBlock(i, true);
+                } else if(activeCubes[i].direction == 2 && y > curYPos + blockSize / 2) {
+                    destroyBlock(i, true);
+                } else if(activeCubes[i].direction == 3 && x > curXPos + blockSize / 2) {
+                    destroyBlock(i, true);
+                }
             }
         } else {
             console.log("not intersecting");
@@ -149,9 +183,39 @@ function checkPlaneIntersections() {
     }
 }
 
+function checkBreakability() {
+    for(let i = 0; i < numCubes; i++) {
+        curXPos = activeCubes[i].mesh.position.x;
+        curYPos = activeCubes[i].mesh.position.y;
+        //check if cursor is in proper relative position to the block
+        const rotated = rotatePoint(getX(cursorX), getY(cursorY), curXPos, curYPos, -activeCubes[i].mesh.rotation.z);
+        const x = rotated[0];
+        const y = rotated[1];
+        //console.log(getX(cursorX), getY(cursorY), curXPos, curYPos, x, y);
+        const direction = activeCubes[i].direction;
+
+        if(direction == 0 && y > curYPos + blockSize / 2) { //need cursor to be above
+            activeCubes[i].breakable = true;
+        } else if(direction == 1 && x > curXPos + blockSize / 2) { //need cursor to be to the right
+            activeCubes[i].breakable = true;
+        } else if(direction == 2 && y < curYPos - blockSize / 2) { //need cursor to be under
+            activeCubes[i].breakable = true;
+        }  else if(direction == 3 && x < curXPos - blockSize / 2) { //need cursor to be to the left
+            activeCubes[i].breakable = true;
+        } else if(activeCubes[i].breakable && Math.abs(curXPos - getX(cursorX)) <= 1 && Math.abs(curYPos - getY(cursorY)) <= 1) { //previously breakable and in box
+            activeCubes[i].breakable = true;
+        } else {
+            activeCubes[i].breakable = false;
+        }
+        // if(activeCubes[i].breakable) {
+        //     console.log(activeCubes[i].breakable);
+        // }
+    }
+}
+
 function frameDebug() {
-    console.log("X Pos on Plane: " + getX(cursorX));
-    console.log("Y Pos on Plane: " + getY(cursorY));
+    //console.log("X Pos on Plane: " + getX(cursorX));
+    //console.log("Y Pos on Plane: " + getY(cursorY));
 }
 
 function animate() {
@@ -159,6 +223,7 @@ function animate() {
     moveAllCubes();
     destroyPastBlocks();
     checkPlaneIntersections();
+    checkBreakability();
     renderer.render(scene, camera);
 }
 
