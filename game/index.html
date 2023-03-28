@@ -10,42 +10,22 @@
 </head>
 <body>
 	<div class="debug_tools">
+		<a id="test_button" href="../">Back</a>
 		<button id="move_block" type="button" class="button0">Randomly Add a Block</button>
+		<input type="file" id="input_file">
 		<p id="cursor_coordinates" class="text0"></p>
 		<p id="clock" class="text0">h</p>
 	</div>
 	<div class="scripts">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
 		<script>
-			let windowHeight = window.screen.height, windowWidth = window.screen.width;
+			let windowHeight = window.innerHeight, windowWidth = window.innerWidth;
 			let scene, camera, renderer;
 			let numCubes = 0;
 			let activeCubes = [];
-			let cubesTargetable = [];
 			let targets = [];
 			let cursorX, cursorY;
 			let planeHeight, planeWidth;
-			// [time (sec), x, y, rotation]
-			let blockSpawnInput = [
-				{
-					time: 5,
-					x: 5,
-					y: 0,
-					rotation: 30
-				},
-				{
-					time: 8,
-					x: 0,
-					y: 5,
-					rotation: 60
-				},
-				{
-					time: 10,
-					x: 2.5,
-					y: 2.5,
-					rotation: 120
-				}
-			];
 		</script>
 		<script src="initializeScene.js"></script> 
 		<script src="getWorldCoordinates.js"></script>
@@ -53,6 +33,7 @@
 		<script src="block.js"></script>
 		<script src="trackCursor.js"></script>
 		<script src="generateBlocks.js"></script>
+		<script src="readFile.js"></script>
 	</div>
 </body>
 </html>

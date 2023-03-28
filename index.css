@@ -1,10 +1,7 @@
-body {
+html, body {
     margin: 0;
-}
-canvas {
-    width: 100%;
     height: 100%;
-}
+  }
 #app {
     width: 100%;
     height: 100%;
@@ -23,20 +20,31 @@ canvas {
 }
 
 
-
-
-.button0 {
+.button {
     color: black;
     display: block;
 	font-family: "OCR A Std", monospace;
-	font-size: 12px;
+	font-size: 40px;
 }
 
-.text0 {
-    color: black;
-    display: block;
-    font-family: "OCR A Std", monospace;
-    font-size: 11px;
-    margin: 0;
-    padding: 0;
+#button1 {
+	position: absolute;
+	top: 260px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+}
+#button2 {
+	position: absolute;
+	top: 300px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+}
+#button3 {
+	position: absolute;
+	top: 340px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
 }

@@ -3,7 +3,7 @@ let display = document.getElementById(`cursor_coordinates`);
 let tracker;
 
 function init() {
-    let trackerGeometry = new THREE.CircleGeometry(0.5);
+    let trackerGeometry = new THREE.CircleGeometry(0.3, 64);
     let trackerMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
     tracker = new THREE.Mesh(trackerGeometry, trackerMaterial)
     scene.add(tracker);

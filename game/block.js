@@ -25,6 +25,14 @@ const targetRadius = 3;
 
 const makeBlockButton = document.querySelector("#move_block");
 
+class Block {
+    constructor(mesh, direction, targetable) {
+        this.mesh = mesh;
+        this.direction = direction;
+        this.targetable = targetable;
+    }
+}
+
 function init() {
     blockGeometry = new THREE.BoxGeometry(blockSize, blockSize, blockSize);
     blockMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});
@@ -41,22 +49,23 @@ function generatePoint(r) {
 }
 
 function makeCube(x = 0, y = 0, rotation = 0) {
-    activeCubes.push(new THREE.Mesh(blockGeometry, blockMaterial));
-    cubesTargetable.push(false);
+    activeCubes.push();
+    activeCubes.push(new Block(new THREE.Mesh(blockGeometry, blockMaterial), 0, false));
+    //cubesTargetable.push(false);
     numCubes++;
 
-    activeCubes.at(-1).geometry.computeBoundingBox();
-    activeCubes.at(-1).rotation.z = rotation;
-    activeCubes.at(-1).position.x = x;
-    activeCubes.at(-1).position.y = y;
-    activeCubes.at(-1).position.z = blockGenerationZCoord;
-    scene.add(activeCubes.at(-1));
+    activeCubes.at(-1).mesh.geometry.computeBoundingBox();
+    activeCubes.at(-1).mesh.rotation.z = rotation;
+    activeCubes.at(-1).mesh.position.x = x;
+    activeCubes.at(-1).mesh.position.y = y;
+    activeCubes.at(-1).mesh.position.z = blockGenerationZCoord;
+    scene.add(activeCubes.at(-1).mesh);
 }
 
 function moveAllCubes() {
     //console.log(activeCubes);
     for (let i = 0; i < numCubes; i++) {
-        activeCubes[i].position.z += 0.1;
+        activeCubes[i].mesh.position.z += 0.1;
     }
 }
 
@@ -66,9 +75,9 @@ function addNewBlock() {
 }
 
 function destroyBlock(index, removeSquare = false) {
-    scene.remove(activeCubes[index]);
+    scene.remove(activeCubes[index].mesh);
     activeCubes.splice(index, 1);
-    cubesTargetable.splice(index, 1);
+    //cubesTargetable.splice(index, 1);
     numCubes--;
     if (removeSquare) {
         removeTargetSquare(0);
@@ -77,7 +86,7 @@ function destroyBlock(index, removeSquare = false) {
 
 function destroyPastBlocks() {
     for (let i = 0; i < numCubes; i++) {
-        if (activeCubes[i].position.z > 10) {
+        if (activeCubes[i].mesh.position.z > 10) {
             destroyBlock(i);
         }
     }
@@ -108,17 +117,18 @@ function checkPlaneIntersections() {
     for (let i = 0; i < numCubes; i++) {
         //activeCubes[i].geometry.computeBoundingBox();
         //console.log(activeCubes[i].geometry.boundingBox);
-        curXPos = activeCubes[i].position.x;
-        curYPos = activeCubes[i].position.y;
-        curZPos = activeCubes[i].position.z;
+        curXPos = activeCubes[i].mesh.position.x;
+        curYPos = activeCubes[i].mesh.position.y;
+        curZPos = activeCubes[i].mesh.position.z;
         // it is targetable
         if (curZPos >= beginTargetable && curZPos <= endTargetable) {
             console.log("intersecting");
-            if (!cubesTargetable[i]) {
-                activeCubes[i].material = new THREE.MeshStandardMaterial({color: 0x00ff00});
+            if (!activeCubes[i].targetable) {
+                activeCubes[i].mesh.material = new THREE.MeshStandardMaterial({color: 0x00ff00});
                 drawTargetSquare([curXPos, curYPos], blockSize, blockSize);
             }
-            cubesTargetable[i] = true;
+            //cubesTargetable[i] = true;
+            activeCubes[i].targetable = true;
             // console.log("cursorX: " + cursorX + " window width: " + windowWidth + " plane width: " + planeWidth);
             // console.log("cursorY: " + cursorY + " window height: " + windowHeight + " plane height: " + planeHeight);
             // console.log("BLOCK POSITION: x: " + curXPos + " y: " + curYPos);
@@ -131,8 +141,9 @@ function checkPlaneIntersections() {
             }
         } else {
             console.log("not intersecting");
-            activeCubes[i].material = new THREE.MeshStandardMaterial({color: 0xff0000});
-            cubesTargetable[i] = false;
+            activeCubes[i].mesh.material = new THREE.MeshStandardMaterial({color: 0xff0000});
+            //cubesTargetable[i] = false;
+            activeCubes[i].targetable = false;
             removeTargetSquare(0);
         }
     }
@@ -144,25 +155,12 @@ function frameDebug() {
 }
 
 function animate() {
-    //frameDebug();
-    // console.log(cubesTargetable);
-    // console.log(activeCubes);
     requestAnimationFrame(animate);
     moveAllCubes();
     destroyPastBlocks();
     checkPlaneIntersections();
     renderer.render(scene, camera);
 }
-
-// function addPlane() {
-//     // planeGeometry = new THREE.PlaneGeometry(2000, 2000, 1, 1);
-//     // planeMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
-//     // plane = new THREE.Mesh(planeGeometry, planeMaterial)
-//     // scene.add(plane);
-//     plane = new THREE.Plane(new THREE.Vector3(0, 0, 0), 0);
-//     const helper = new THREE.PlaneHelper( plane, 1, 0xffffff );
-//     scene.add( helper );
-// }
 
 init();
 //addLight(7);
