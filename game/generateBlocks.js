@@ -1,10 +1,9 @@
 
 let timeDisplay = document.getElementById(`clock`);
 let clock = new THREE.Clock(true);
-const testButton = document.querySelector("#test_button");
 
 // [time (sec), x, y, rotation]
-let map = [];
+let map = sessionStorage.getItem("Active Map") ? JSON.parse(sessionStorage.getItem(sessionStorage.getItem("Active Map"))) : [];
 
 function sortMap() {
     // sort block spawn input by reverse in terms of time
@@ -17,8 +16,7 @@ function sortMap() {
     })
 }
 
-function loadMap(blockSpawnInput = []) {
-    map = blockSpawnInput;
+function loadMap() {
     console.log(map);
     sortMap();
     curBlock = null;
@@ -35,7 +33,7 @@ function frame() {
     curTime = clock.getElapsedTime();
     timeDisplay.innerHTML = `Seconds Passed: ${curTime}`;
     while (curBlock && curTime >= curBlock.time) {
-        makeCube(curBlock.x, curBlock.y, curBlock.rotation);
+        makeCube(curBlock.x, curBlock.y, curBlock.rotation, -1);
         map.pop();
         if (map.length === 0) {
             console.log("EMPTY");
@@ -48,11 +46,6 @@ function frame() {
 
 loadMap();
 
-console.log(map);
-
-console.log(`here`);
-
-testButton.addEventListener('click', loadMap());
 frame();
 
 

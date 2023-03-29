@@ -69,9 +69,12 @@ function rotatePoint(x, y, centerX, centerY, angle) {
     return [newX, newY];
 }
 
-function makeCube(x = 0, y = 0, rotation = 0) {
+function makeCube(x = 0, y = 0, rotation = 0, direction = -1) {
+    if (direction < 0) {
+        direction = Math.floor(Math.random() * 4);
+    }
     activeCubes.push();
-    activeCubes.push(new Block(new THREE.Mesh(blockGeometry, blockMaterial), Math.floor(Math.random() * 3), false, false));
+    activeCubes.push(new Block(new THREE.Mesh(blockGeometry, blockMaterial), direction, false, false));
     console.log(`direction: ${activeCubes.at(-1).direction}`);
     console.log(`rotation: ${rotation}`);
     //cubesTargetable.push(false);
