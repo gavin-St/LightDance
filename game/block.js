@@ -23,6 +23,8 @@ planeWidth = blockGenerationRadius * 2.4;
 // the number of units cursor should be within to break block
 const targetRadius = 3;
 
+const despawnBlockLimit = 10;
+
 const makeBlockButton = document.querySelector("#move_block");
 
 class Block {
@@ -73,6 +75,7 @@ function makeCube(x = 0, y = 0, rotation = 0, direction = -1) {
     if (direction < 0) {
         direction = Math.floor(Math.random() * 4);
     }
+    direction = 0;
     activeCubes.push();
     activeCubes.push(new Block(new THREE.Mesh(blockGeometry, blockMaterial), direction, false, false));
     console.log(`direction: ${activeCubes.at(-1).direction}`);
@@ -112,7 +115,7 @@ function destroyBlock(index, removeSquare = false) {
 
 function destroyPastBlocks() {
     for (let i = 0; i < numCubes; i++) {
-        if (activeCubes[i].mesh.position.z > 10) {
+        if (activeCubes[i].mesh.position.z > despawnBlockLimit) {
             destroyBlock(i);
         }
     }
@@ -148,7 +151,7 @@ function checkPlaneIntersections() {
         curZPos = activeCubes[i].mesh.position.z;
         // it is targetable
         if (curZPos >= beginTargetable && curZPos <= endTargetable) {
-            console.log("intersecting");
+            // console.log("intersecting");
             if (!activeCubes[i].targetable) {
                 activeCubes[i].mesh.material = new THREE.MeshStandardMaterial({color: 0x00ff00});
                 drawTargetSquare([curXPos, curYPos], blockSize, blockSize);
@@ -166,18 +169,18 @@ function checkPlaneIntersections() {
             const direction = activeCubes[i].direction;
             //check if it passed through the entire block
             if(activeCubes[i].breakable) {
-                if(activeCubes[i].direction == 0 && y < curYPos - blockSize / 2) {
+                if(activeCubes[i].direction == 0 && y < curYPos) {
                     destroyBlock(i, true);
-                } else if(activeCubes[i].direction == 1 && x < curXPos - blockSize / 2) {
+                } else if(activeCubes[i].direction == 1 && x < curXPos) {
                     destroyBlock(i, true);
-                } else if(activeCubes[i].direction == 2 && y > curYPos + blockSize / 2) {
+                } else if(activeCubes[i].direction == 2 && y > curYPos) {
                     destroyBlock(i, true);
-                } else if(activeCubes[i].direction == 3 && x > curXPos + blockSize / 2) {
+                } else if(activeCubes[i].direction == 3 && x > curXPos) {
                     destroyBlock(i, true);
                 }
             }
         } else {
-            console.log("not intersecting");
+            // console.log("not intersecting");
             activeCubes[i].mesh.material = new THREE.MeshStandardMaterial({color: 0xff0000});
             //cubesTargetable[i] = false;
             activeCubes[i].targetable = false;
@@ -197,6 +200,7 @@ function checkBreakability() {
         //console.log(getX(cursorX), getY(cursorY), curXPos, curYPos, x, y);
         const direction = activeCubes[i].direction;
 
+        console.log(activeCubes[i].breakable);
         if(direction == 0 && y > curYPos + blockSize / 2) { //need cursor to be above
             activeCubes[i].breakable = true;
         } else if(direction == 1 && x > curXPos + blockSize / 2) { //need cursor to be to the right
@@ -205,7 +209,7 @@ function checkBreakability() {
             activeCubes[i].breakable = true;
         }  else if(direction == 3 && x < curXPos - blockSize / 2) { //need cursor to be to the left
             activeCubes[i].breakable = true;
-        } else if(activeCubes[i].breakable && Math.abs(curXPos - getX(cursorX)) <= 1 && Math.abs(curYPos - getY(cursorY)) <= 1) { //previously breakable and in box
+        } else if(activeCubes[i].breakable && Math.abs(curXPos - getX(cursorX)) <= blockSize / 2 && Math.abs(curYPos - getY(cursorY)) <= blockSize / 2) { //previously breakable and in box
             activeCubes[i].breakable = true;
         } else {
             activeCubes[i].breakable = false;
