@@ -33,7 +33,7 @@ function frame() {
     curTime = clock.getElapsedTime();
     timeDisplay.innerHTML = `Seconds Passed: ${curTime}`;
     while (curBlock && curTime >= curBlock.time) {
-        makeCube(curBlock.x, curBlock.y, curBlock.rotation, -1);
+        generator.generateBlock(curBlock.x, curBlock.y, curBlock.rotation, -1);
         map.pop();
         if (map.length === 0) {
             console.log("EMPTY");

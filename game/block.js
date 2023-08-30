@@ -1,238 +1,266 @@
 let blockGeometry, blockMaterial;
 
-// bounds of targetability of blocks
-const centerZTargetable = 0;
-const targetableRadius = 1; // > 0
-
-// size of (square) blocks
-const blockSize = 2;
-
-// the Z coordinates where blocks can begin and end being targetable
-const beginTargetable = centerZTargetable - targetableRadius;
-const endTargetable = centerZTargetable + targetableRadius;
-
-// the radius from (0,0) at which to generate blocks in
-const blockGenerationRadius = 5;
-// the z coordinate to generate blocks at
-const blockGenerationZCoord = -10;
-
-// imaginary plane at which cursor sits on to target blocks
-planeHeight = blockGenerationRadius * 2.4;
-planeWidth = blockGenerationRadius * 2.4;
-
-// the number of units cursor should be within to break block
-const targetRadius = 3;
-
 const makeBlockButton = document.querySelector("#move_block");
 
 class Block {
-    constructor(mesh, direction, targetable, breakable) {
+    targetSquare;
+    constructor(mesh, x, y, z, rotation, direction, width, height, depth) {
         this.mesh = mesh;
+
+        this.mesh.geometry.computeBoundingBox();
+        this.mesh.position.x = x;
+        this.mesh.position.y = y;
+        this.mesh.position.z = z;
+        this.mesh.rotation.z = rotation;
+
         this.direction = direction;
-        this.targetable = targetable;
-        this.breakable = breakable;
+        this.width = width;
+        this.height = height;
+        this.depth = depth;
+        this.inRange = false;
+        this.breakable = false;
+        this.#setTargetSquare()
+    }
+    get xCoord() {
+        return this.mesh.position.x;
+    }
+    get yCoord() {
+        return this.mesh.position.y;
+    }
+    get zCoord() {
+        return this.mesh.position.z;
+    }
+    // draws a target square for the hitbox of a block
+    #setTargetSquare() {
+        let square = new THREE.Shape();
+        square.moveTo(this.xCoord, this.yCoord);
+        square.currentPoint = new THREE.Vector2(this.xCoord - this.width/2, this.yCoord - this.height/2);
+        square.lineTo(this.xCoord - this.width/2, this.yCoord + this.height/2);
+        square.lineTo(this.xCoord + this.width/2, this.yCoord + this.height/2);
+        square.lineTo(this.xCoord + this.width/2, this.yCoord - this.height/2);
+        square.lineTo(this.xCoord - this.width/2, this.yCoord - this.height/2);
+        let squareGeometry = new THREE.ShapeGeometry(square);
+        let squareMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        let squareMesh = new THREE.Mesh(squareGeometry, squareMaterial);
+        squareMesh.visible = false;
+        this.targetSquare = squareMesh;
+        scene.add(this.targetSquare);
+    }
+    showTargetSquare(show = true) {
+        this.targetSquare.visible = show;
     }
 }
 
-function init() {
-    blockGeometry = new THREE.BoxGeometry(blockSize, blockSize, blockSize);
-    blockMaterial = new THREE.MeshStandardMaterial({color: 0xff0000});
-}
-
-function generatePoint(r) {
-    let  randomValue = Math.random() * 2 * Math.PI;
-    // x, y, angle
-    let tuple = [r * Math.cos(randomValue), r * Math.sin(randomValue), randomValue];
-    //console.log(randomValue);
-    //console.log(r * Math.cos(randomValue));
-    //console.log(r * Math.sin(randomValue));
-    return tuple;
-}
-
-function rotatePoint(x, y, centerX, centerY, angle) {
-    //rotate (x,y) around (centerX, centerY) by angle radians
-
-    const c = Math.cos(angle);
-    const s = Math.sin(angle);
-
-    //subtract center to make this equivalent to rotating around origin
-    x -= centerX;
-    y -= centerY;
-
-    let newX = x * c - y * s;
-    let newY = x * s + y * c;
-
-    //add back center
-    newX += centerX;
-    newY += centerY;
-
-    return [newX, newY];
-}
-
-function makeCube(x = 0, y = 0, rotation = 0, direction = -1) {
-    if (direction < 0) {
-        direction = Math.floor(Math.random() * 4);
+class BlockGenerator {
+    numCubes; // number of cubes in the scene
+    blockArray; // array of Block(), tracking all active blocks in the scene
+    blockGenerationBorders; // obj of [beginX, endX, beginY, endY], the borders such that any block generated outside of these will be forced inside
+    #blockGeometry;
+    #blockMaterial;
+    #blockDimensions; // array, [width, height, depth]
+    #blockGenerationZCoord; // radius at which to generate blocks (only used for random generation)
+    #despawnLimit; // the z coord at which blocks will despawn (to save memory)
+    constructor(blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit) {
+        this.numCubes = 0;
+        this.blockArray = [];
+        this.blockGenerationBorders = blockGenerationBorders;
+        this.#blockDimensions = blockDimensions
+        this.#blockGenerationZCoord = blockGenerationZCoord;
+        this.#despawnLimit = despawnLimit;
+        this.#initializeBlockData();
     }
-    activeCubes.push();
-    activeCubes.push(new Block(new THREE.Mesh(blockGeometry, blockMaterial), direction, false, false));
-    console.log(`direction: ${activeCubes.at(-1).direction}`);
-    console.log(`rotation: ${rotation}`);
-    //cubesTargetable.push(false);
-    numCubes++;
 
-    activeCubes.at(-1).mesh.geometry.computeBoundingBox();
-    activeCubes.at(-1).mesh.rotation.z = rotation;
-    activeCubes.at(-1).mesh.position.x = x;
-    activeCubes.at(-1).mesh.position.y = y;
-    activeCubes.at(-1).mesh.position.z = blockGenerationZCoord;
-    scene.add(activeCubes.at(-1).mesh);
-}
-
-function moveAllCubes() {
-    //console.log(activeCubes);
-    for (let i = 0; i < numCubes; i++) {
-        activeCubes[i].mesh.position.z += 0.05;
+    #initializeBlockData(width = 2, height = 2, depth = 2, blockColor = 0xff0000) {
+        this.#blockGeometry = new THREE.BoxGeometry(width, height, depth);
+        this.#blockMaterial = new THREE.MeshStandardMaterial({color: blockColor});
     }
-}
 
-function addNewBlock() {
-    tuple = generatePoint(blockGenerationRadius);
-    makeCube(tuple[0], tuple[1], tuple[2]);
-}
-
-function destroyBlock(index, removeSquare = false) {
-    scene.remove(activeCubes[index].mesh);
-    activeCubes.splice(index, 1);
-    //cubesTargetable.splice(index, 1);
-    numCubes--;
-    if (removeSquare) {
-        removeTargetSquare(0);
+    // generates a random point on a circle of radius r
+    generatePoint(r) {
+        let randomValue = Math.random() * 2 * Math.PI;
+        let x = r * Math.cos(randomValue);
+        let y = r * Math.sin(randomValue);
+        let rotation = Math.random() * 2 * Math.PI;
+        let direction = (Math.random() * 4) % 4;
+        // x, y, angle, direction
+        return [x, y, rotation, direction];
     }
-}
+    // ???
+    _rotatePoint(x, y, centerX, centerY, angle) {
+        //rotate (x,y) around (centerX, centerY) by angle radians
+        const c = Math.cos(angle);
+        const s = Math.sin(angle);
+    
+        //subtract center to make this equivalent to rotating around origin
+        x -= centerX;
+        y -= centerY;
+    
+        let newX = x * c - y * s;
+        let newY = x * s + y * c;
+    
+        //add back center
+        newX += centerX;
+        newY += centerY;
+    
+        return [newX, newY];
+    }
 
-function destroyPastBlocks() {
-    for (let i = 0; i < numCubes; i++) {
-        if (activeCubes[i].mesh.position.z > 10) {
-            destroyBlock(i);
+
+    // generates a block
+    generateBlock(x = 0, y = 0, rotation = 0, direction = 0) {
+        if (direction < 0) {
+            direction = Math.floor(Math.random() * 4);
+        }
+        direction = 0;
+        this.blockArray.push();
+        if (x < this.blockGenerationBorders.beginX) {
+            x = this.blockGenerationBorders.beginX;
+        } else if (x > this.blockGenerationBorders.endX) {
+            x = this.blockGenerationBorders.endX;
+        }
+        if (y < this.blockGenerationBorders.beginY) {
+            y = this.blockGenerationBorders.beginY;
+        } else if (y > this.blockGenerationBorders.endY) {
+            y = this.blockGenerationBorders.endY;
+        }
+        this.blockArray.push(new Block(new THREE.Mesh(this.#blockGeometry, this.#blockMaterial), x, y, this.#blockGenerationZCoord, rotation, direction, this.#blockDimensions[0], this.#blockDimensions[0], this.#blockDimensions[0]));
+        this.numCubes++;
+        scene.add(this.blockArray.at(-1).mesh);
+    }
+    // // randomly generates a block on a circle with radius blockGenerationRadius
+    // randomlyGenerateBlock() {
+    //     console.log(this);
+    //     console.log(this.blockGenerationBorders);
+    //     let tuple = this._generatePoint((this.blockGenerationBorders[0] + this.blockGenerationBorders[1]) / 2);
+    //     this.generateBlock(tuple[0], tuple[1], tuple[2], tuple[3]);
+    // }
+    // moves all cubes forward distance units in the scene
+    moveAllCubes(distance = 0.05) {
+        //console.log(this.blockArray);
+        for (let i = 0; i < this.numCubes; i++) {
+            this.blockArray[i].mesh.position.z += distance;
+        }
+    }
+    // destroys the block at index
+    destroyBlock(index) {
+        scene.remove(this.blockArray[index].targetSquare);
+        scene.remove(this.blockArray[index].mesh);
+        this.blockArray.splice(index, 1);
+        this.numCubes--;
+    }
+    // destroy all passed blocks
+    destroyPastBlocks() {
+        for (let i = 0; i < this.numCubes; i++) {
+            if (this.blockArray[i].zCoord > this.#despawnLimit) {
+                this.destroyBlock(i);
+            }
         }
     }
 }
 
-// center: [centerX, centerY]
-function drawTargetSquare(center, width, height) {
-    let square = new THREE.Shape();
-    square.moveTo(center[0], center[1]);
-    square.currentPoint = new THREE.Vector2(center[0] - width/2, center[1] - height/2);
-    square.lineTo(center[0] - width/2, center[1] + height/2);
-    square.lineTo(center[0] + width/2, center[1] + height/2);
-    square.lineTo(center[0] + width/2, center[1] - height/2);
-    square.lineTo(center[0] - width/2, center[1] - height/2);
-    let squareGeometry = new THREE.ShapeGeometry(square);
-    let squareMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    let squareMesh = new THREE.Mesh(squareGeometry, squareMaterial);
-    targets.push(squareMesh);
-    scene.add(targets.at(-1));
-}
+class BreakableBlockGenerator extends BlockGenerator {
+    #inRangeCenterZCoord; // center Z coordinate of the in-range region for blocks
+    #inRangeRadius; // the radius of the in-range region centered at inRangeCenterZCoord
+    #beginInRange; // start of in-range region (z-coord)
+    #endInRange; // end of in-range region (z-coord)
+    constructor(blockGenerationZCoord, despawnLimit, blockGenerationBorders, blockDimensions, inRangeCenterZCoord, inRangeRadius) {
+        super(blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit);
+        this.#inRangeCenterZCoord = inRangeCenterZCoord;
+        this.#inRangeRadius = inRangeRadius;
+        this.#beginInRange = inRangeCenterZCoord - inRangeRadius;
+        this.#endInRange = inRangeCenterZCoord + inRangeRadius;
+    }
 
-function removeTargetSquare(index) {
-    scene.remove(targets[index]);
-    targets.splice(index, 1);
-}
-
-function checkPlaneIntersections() {
-    for (let i = 0; i < numCubes; i++) {
-        //activeCubes[i].geometry.computeBoundingBox();
-        //console.log(activeCubes[i].geometry.boundingBox);
-        curXPos = activeCubes[i].mesh.position.x;
-        curYPos = activeCubes[i].mesh.position.y;
-        curZPos = activeCubes[i].mesh.position.z;
-        // it is targetable
-        if (curZPos >= beginTargetable && curZPos <= endTargetable) {
-            console.log("intersecting");
-            if (!activeCubes[i].targetable) {
-                activeCubes[i].mesh.material = new THREE.MeshStandardMaterial({color: 0x00ff00});
-                drawTargetSquare([curXPos, curYPos], blockSize, blockSize);
-            }
-            //cubesTargetable[i] = true;
-            activeCubes[i].targetable = true;
-            // console.log("cursorX: " + cursorX + " window width: " + windowWidth + " plane width: " + planeWidth);
-            // console.log("cursorY: " + cursorY + " window height: " + windowHeight + " plane height: " + planeHeight);
-            // console.log("BLOCK POSITION: x: " + curXPos + " y: " + curYPos);
-            // console.log("X Pos on Plane: " + (cursorX / windowWidth - 0.5) * planeWidth);
-            // console.log("Y Pos on Plane: " + (-cursorY / windowHeight + 0.5) * planeHeight);
-            const rotated = rotatePoint(getX(cursorX), getY(cursorY), curXPos, curYPos, -activeCubes[i].mesh.rotation.z);
+    // check for when blocks become breakable (cursor in correct position to break block)
+    checkBreakability() {
+        for (let i = 0; i < this.numCubes; i++) {
+            let curXPos = this.blockArray[i].xCoord;
+            let curYPos = this.blockArray[i].yCoord;
+            //check if cursor is in proper relative position to the block
+            const rotated = this._rotatePoint(getX(cursorX), getY(cursorY), curXPos, curYPos, -this.blockArray[i].mesh.rotation.z);
             const x = rotated[0];
             const y = rotated[1];
-            const direction = activeCubes[i].direction;
-            //check if it passed through the entire block
-            if(activeCubes[i].breakable) {
-                if(activeCubes[i].direction == 0 && y < curYPos - blockSize / 2) {
-                    destroyBlock(i, true);
-                } else if(activeCubes[i].direction == 1 && x < curXPos - blockSize / 2) {
-                    destroyBlock(i, true);
-                } else if(activeCubes[i].direction == 2 && y > curYPos + blockSize / 2) {
-                    destroyBlock(i, true);
-                } else if(activeCubes[i].direction == 3 && x > curXPos + blockSize / 2) {
-                    destroyBlock(i, true);
-                }
+            const direction = this.blockArray[i].direction;
+            const height = this.blockArray[i].height;
+            const width = this.blockArray[i].width;
+
+            if ((direction == 0 && y > curYPos + height / 2) //need cursor to be above
+             || (direction == 1 && x > curXPos + width / 2) //need cursor to be to the right
+             || (direction == 2 && y < curYPos - height / 2) //need cursor to be under
+             || (direction == 3 && x < curXPos - width / 2) //need cursor to be to the left
+             || (this.blockArray[i].breakable && Math.abs(curXPos - getX(cursorX)) <= width / 2 && Math.abs(curYPos - getY(cursorY)) <= height / 2) //previously breakable and in box
+            ) {
+                this.blockArray[i].breakable = true;
+            } else {
+                this.blockArray[i].breakable = false;
             }
-        } else {
-            console.log("not intersecting");
-            activeCubes[i].mesh.material = new THREE.MeshStandardMaterial({color: 0xff0000});
-            //cubesTargetable[i] = false;
-            activeCubes[i].targetable = false;
-            removeTargetSquare(0);
+        }
+    }
+
+    // check for when blocks come into range (z-coord region), and if its also breakable + cursor has passed through the block enough, destroy the block
+    checkInRange() {
+        for (let i = 0; i < this.numCubes; i++) {
+            let curXPos = this.blockArray[i].xCoord;
+            let curYPos = this.blockArray[i].yCoord;
+            let curZPos = this.blockArray[i].zCoord;
+            // it is in range
+            if (curZPos >= this.#beginInRange && curZPos <= this.#endInRange) {
+                console.log("in range");
+                if (!this.blockArray[i].inRange) {
+                    // make the block green
+                    this.blockArray[i].mesh.material = new THREE.MeshStandardMaterial({color: 0x00ff00});
+                    this.blockArray[i].showTargetSquare(true);
+                }
+                this.blockArray[i].inRange = true;
+                const rotated = this._rotatePoint(getX(cursorX), getY(cursorY), curXPos, curYPos, -this.blockArray[i].mesh.rotation.z);
+                const x = rotated[0];
+                const y = rotated[1];
+                const direction = this.blockArray[i].direction;
+                //check if it passed through the entire block
+                if (this.blockArray[i].breakable && ((direction == 0 && y < curYPos)
+                                                  || (direction == 1 && x < curXPos)
+                                                  || (direction == 2 && y > curYPos)
+                                                  || (direction == 3 && x > curXPos))) {
+                    this.destroyBlock(i);
+                }
+            } else {
+                this.blockArray[i].mesh.material = new THREE.MeshStandardMaterial({color: 0xff0000});
+                this.blockArray[i].inRange = false;
+                this.blockArray[i].showTargetSquare(false);
+            }
         }
     }
 }
 
-function checkBreakability() {
-    for(let i = 0; i < numCubes; i++) {
-        curXPos = activeCubes[i].mesh.position.x;
-        curYPos = activeCubes[i].mesh.position.y;
-        //check if cursor is in proper relative position to the block
-        const rotated = rotatePoint(getX(cursorX), getY(cursorY), curXPos, curYPos, -activeCubes[i].mesh.rotation.z);
-        const x = rotated[0];
-        const y = rotated[1];
-        //console.log(getX(cursorX), getY(cursorY), curXPos, curYPos, x, y);
-        const direction = activeCubes[i].direction;
+let generator = new BreakableBlockGenerator(
+    blockGenerationZCoord = -10, 
+    despawnLimit = 10, 
+    blockGenerationBorders = {beginX: -5, endX: 5, beginY: -5, endY: 5}, 
+    blockDimensions = [2, 2, 2], 
+    inRangeCenterZCoord = 0, 
+    inRangeRadius = 1
+);
 
-        if(direction == 0 && y > curYPos + blockSize / 2) { //need cursor to be above
-            activeCubes[i].breakable = true;
-        } else if(direction == 1 && x > curXPos + blockSize / 2) { //need cursor to be to the right
-            activeCubes[i].breakable = true;
-        } else if(direction == 2 && y < curYPos - blockSize / 2) { //need cursor to be under
-            activeCubes[i].breakable = true;
-        }  else if(direction == 3 && x < curXPos - blockSize / 2) { //need cursor to be to the left
-            activeCubes[i].breakable = true;
-        } else if(activeCubes[i].breakable && Math.abs(curXPos - getX(cursorX)) <= 1 && Math.abs(curYPos - getY(cursorY)) <= 1) { //previously breakable and in box
-            activeCubes[i].breakable = true;
-        } else {
-            activeCubes[i].breakable = false;
-        }
-        // if(activeCubes[i].breakable) {
-        //     console.log(activeCubes[i].breakable);
-        // }
-    }
+// randomly generates a block on a circle with radius blockGenerationRadius
+function randomlyGenerateBlock() {
+    let tuple = generator.generatePoint((generator.blockGenerationBorders.endX - generator.blockGenerationBorders.beginX) / 2);
+    generator.generateBlock(tuple[0], tuple[1], tuple[2], tuple[3]);
 }
 
-function frameDebug() {
-    //console.log("X Pos on Plane: " + getX(cursorX));
-    //console.log("Y Pos on Plane: " + getY(cursorY));
-}
+// imaginary plane at which cursor sits on to target blocks, *2.4 since it will be double the radius + a bit more
+planeHeight = (generator.blockGenerationBorders.endY - generator.blockGenerationBorders.beginY) / 2 * 2.4;
+planeWidth = (generator.blockGenerationBorders.endX - generator.blockGenerationBorders.beginX) / 2 * 2.4;
 
 function animate() {
     requestAnimationFrame(animate);
-    moveAllCubes();
-    destroyPastBlocks();
-    checkPlaneIntersections();
-    checkBreakability();
+    generator.moveAllCubes(0.05);
+    generator.destroyPastBlocks();
+    generator.checkInRange();
+    generator.checkBreakability();
     renderer.render(scene, camera);
 }
 
-init();
-//addLight(7);
-makeBlockButton.addEventListener('click', addNewBlock);
+makeBlockButton.addEventListener('click', randomlyGenerateBlock);
 animate();
 
 
