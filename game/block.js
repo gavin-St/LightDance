@@ -196,12 +196,14 @@ class BreakableBlockGenerator extends BlockGenerator {
     #inRangeRadius; // the radius of the in-range region centered at inRangeCenterZCoord
     #beginInRange; // start of in-range region (z-coord)
     #endInRange; // end of in-range region (z-coord)
-    constructor(blockGenerationZCoord, despawnLimit, blockGenerationBorders, blockDimensions, inRangeCenterZCoord, inRangeRadius) {
+    #errorMargin; 
+    constructor(blockGenerationZCoord, despawnLimit, blockGenerationBorders, blockDimensions, inRangeCenterZCoord, inRangeRadius, errorMargin) {
         super(blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit);
         this.#inRangeCenterZCoord = inRangeCenterZCoord;
         this.#inRangeRadius = inRangeRadius;
         this.#beginInRange = inRangeCenterZCoord - inRangeRadius;
         this.#endInRange = inRangeCenterZCoord + inRangeRadius;
+        this.#errorMargin = errorMargin;
     }
 
     // check for when blocks become breakable (cursor in correct position to break block)
@@ -218,11 +220,11 @@ class BreakableBlockGenerator extends BlockGenerator {
             const width = this.blockArray[i].width;
             // console.log(`direction: ${direction}`);
 
-            if ((direction == 0 && y > curYPos + height / 2 - 0.05) //need cursor to be above
-             || (direction == 1 && x > curXPos + width / 2 - 0.05) //need cursor to be to the right
-             || (direction == 2 && y < curYPos - height / 2 + 0.05) //need cursor to be under
-             || (direction == 3 && x < curXPos - width / 2 + 0.05) //need cursor to be to the left
-             || (this.blockArray[i].breakable && this.blockArray[i].inRange && Math.abs(curXPos - getX(cursorX)) <= width / 2 + 0.05 && Math.abs(curYPos - getY(cursorY)) <= height / 2 + 0.05) //previously breakable and in box
+            if ((direction == 0 && y > curYPos + height / 2 - errorMargin) //need cursor to be above
+             || (direction == 1 && x > curXPos + width / 2 - errorMargin) //need cursor to be to the right
+             || (direction == 2 && y < curYPos - height / 2 + errorMargin) //need cursor to be under
+             || (direction == 3 && x < curXPos - width / 2 + errorMargin) //need cursor to be to the left
+             || (this.blockArray[i].breakable && this.blockArray[i].inRange && Math.abs(curXPos - getX(cursorX)) <= width / 2 + errorMargin && Math.abs(curYPos - getY(cursorY)) <= height / 2 + errorMargin) //previously breakable and in box
             ) {
                 if(!this.blockArray[i].breakable) {
                     console.log("just became breakable");
@@ -298,7 +300,8 @@ let generator = new BreakableBlockGenerator(
     blockGenerationBorders = {beginX: -5, endX: 5, beginY: -5, endY: 5}, 
     blockDimensions = [2, 2, 2], 
     inRangeCenterZCoord = 0, 
-    inRangeRadius = 1
+    inRangeRadius = 1,
+    errorMargin = 0.05
 );
 
 // randomly generates a block on a circle with radius blockGenerationRadius
