@@ -1,47 +1,47 @@
-const cv = require('./opencv.js');
-const pi = 3.1415926535897932384626
+const pi = 3.1415926535897932384626;
 
 function circularity(area, perimeter) {
     return (4 * pi * area) / (perimeter * perimeter);
 }
 
-function get_brightest_point(img) {
+const get_brightest_point = (img) => {
 
     //grayscale and blur image
-
-    const grayscaled = cv.cvtColor(img, cv.COLOR_BGR2GRAY);
-    const blurred = cv.medianBlur(grayscaled, 21);
+    let grayscaled = new cv.Mat();
+    cv.cvtColor(img, grayscaled, cv.COLOR_BGR2GRAY);
+    let blurred = new cv.Mat();
+    cv.medianBlur(grayscaled, blurred, 21);
 
     const min_max_info = cv.minMaxLoc(blurred);
-    const brightest_value = min_max_info[1];
+    const brightest_value = min_max_info.maxVal;
 
     console.log(brightest_value);
 
     // any pixel >= 200 is set to white (255) and any < 200 are set to black
-
-    let brightest_only = cv.threshold(blurred, brightest_value-3, 255, cv.THRESH_BINARY)[1];
+    let brightest_only = new cv.Mat();
+    cv.threshold(blurred, brightest_only, brightest_value-3, 255, cv.THRESH_BINARY);
 
     //remove small areas/noise
-
-    brightest_only = cv.erode(brightest_only, null, iterations=2);
-    brightest_only = cv.dilate(brightest_only, null, iterations=4);
+    let kernel = new cv.Mat();
+    cv.erode(brightest_only, brightest_only, kernel, new cv.Point(-1, -1), 2);
+    cv.dilate(brightest_only, brightest_only, kernel, new cv.Point(-1, -1), 4);
+    kernel.delete();
 
     //find contours
+    let contours = new cv.MatVector();
+    let hierarchy = new cv.Mat();
+    cv.findContours(brightest_only, contours, hierarchy, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE);
 
-    const contours = cv.findContours(brightest_only, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE);
-    const hierarchy = cv.findContours(brightest_only, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE);
-
-    const num_contours = contours.length;
+    console.log("Number of contours: ", contours.size());
 
     //initialize to smallest possible
-
     let max_circ = 0;
-    let most_circ_contour = null;
+    let most_circ_contour = new cv.Mat();
 
     //find contour with max circularity
 
-    for(let i = 0; i < contours.length; i++) {
-        const contour = contours[i];
+    for(let i = 0; i < contours.size(); i++) {
+        const contour = contours.get(i);
         const area = cv.contourArea(contour);
         const perim = cv.arcLength(contour, true);
         const circ = circularity(area, perim);
@@ -52,9 +52,10 @@ function get_brightest_point(img) {
     }
 
     //centroid of the most circular moment
-
     const img_moment = cv.moments(most_circ_contour);
     
+    console.log(img_moment);
+
     let centerX = 0;
     let centerY = 0;
 
@@ -65,10 +66,16 @@ function get_brightest_point(img) {
         console.log("ERROR");
     }
 
-    const brightest_point_info = new Map();
-    brightest_point_info.set("center_x", centerX);
-    brightest_point_info.set("center_y", centerY);
+    const brightest_point_info = {"center_x": centerX, "center_y": centerY};
+    
+    grayscaled.delete();
+    blurred.delete();
+    brightest_only.delete();
+    hierarchy.delete();
+    contours.delete();
+    most_circ_contour.delete();
 
+    console.log(brightest_point_info)
     return brightest_point_info;
 }
 

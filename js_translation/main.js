@@ -1,27 +1,44 @@
-// let img_input = document.getElementById('input_image');
-// let file_input = document.getElementById('file_input');
+import  openCamera  from "./open_camera.js";
+import  get_brightest_point  from "./detect_light.js";
 
-// file_input.addEventListener('change', (e) => {
-//     img_input.src = URL.createObjectURL(e.target.files[0])
-// }, false)
+let src, dst, gray, cap, faces;
+let classifier;
+let utils;
+let faceCascadeFile;
 
-// img_input.onload = function() {
-//     let mat = cv.imread(img_input);
-//     cv.cvtColor(mat, mat, cv.COLOR_RGB2GRAY);
-//     cv.imshow('output', mat);
-//     mat.delete();
-// }
+let color;
+const thickness = 9;
+// the number of recent frames to keep the movement line on for
+const frames_tracked = 10;
+let cur_len = 0;
+const coords = [];
 
-import {open_camera} from "./open_camera.js";
+class Coord {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+}
 
-let src;
-let dst
-let gray
-let cap
-let faces
-let classifier
-let utils
-let faceCascadeFile
+//remove first n elements from arr
+function remove_front(arr, n) {
+    const arr_len = arr.length;
+    if(arr_len < n) {
+        return [];
+    }
+    while(n > 0) {
+        arr.shift();
+        n--;
+    }
+    return arr;
+}
+
+let keepRunning = true;
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'q' || event.keyCode === 81) { // 81 is the keycode for "q"
+        keepRunning = false;
+    }
+});
 
 function opencvReadyHandler() {
     console.log('OpenCV is now ready!');
@@ -35,8 +52,9 @@ function opencvReadyHandler() {
         console.log("An error occurred! " + err);
     });
     console.log(cv);
-    console.log(cv.COLOR_RGBA2GRAY);
     
+    color = new cv.Scalar(0, 255, 0, 255);
+
     function onVideoPlaying() {
         // Now initialize src
         let videoWidth = video.videoWidth;
@@ -48,13 +66,13 @@ function opencvReadyHandler() {
             dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
             gray = new cv.Mat();
             cap = new cv.VideoCapture(cam_input);
-            faces = new cv.RectVector();
-            classifier = new cv.CascadeClassifier();
-            utils = new Utils('errorMessage');
-            faceCascadeFile = 'haarcascade_frontalface_default.xml'; // path to xml
-            utils.createFileFromUrl(faceCascadeFile, faceCascadeFile, () => {
-                classifier.load(faceCascadeFile); // in the callback, load the cascade from file 
-            });
+            // faces = new cv.RectVector();
+            // classifier = new cv.CascadeClassifier();
+            // utils = new Utils('errorMessage');
+            // faceCascadeFile = 'haarcascade_frontalface_default.xml'; // path to xml
+            // utils.createFileFromUrl(faceCascadeFile, faceCascadeFile, () => {
+            //     classifier.load(faceCascadeFile); // in the callback, load the cascade from file 
+            // });
         } else {
             console.error('Video dimensions are not available yet');
         }
@@ -72,30 +90,71 @@ function opencvReadyHandler() {
     function processVideo() {
         if (src) {
             let begin = Date.now();
-            console.log(src)
-            console.log(video.readyState);  // Should be >= 2 (HAVE_CURRENT_DATA) or ideally 4 (HAVE_ENOUGH_DATA)
-            console.log(video.videoWidth, video.videoHeight);  // Should be > 0
-            console.log(src.size());
+            // console.log(src)
+            // console.log(video.readyState);  // Should be >= 2 (HAVE_CURRENT_DATA) or ideally 4 (HAVE_ENOUGH_DATA)
+            // console.log(video.videoWidth, video.videoHeight);  // Should be > 0
+            // console.log(src.size());
 
-            cap.read(src);
-            src.copyTo(dst);
-            cv.cvtColor(dst, gray, cv.COLOR_RGBA2GRAY, 0);
-            try {
-                classifier.detectMultiScale(gray, faces, 1.1, 3, 0);
-                console.log(faces.size());
-            } catch(err) {
-                console.log(err);
+            let frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+
+            cap.read(frame);
+
+            if(!frame) {
+                console.log("Stopped receiving stream. Exiting ...");
+                return;
             }
-            for (let i = 0; i < faces.size(); ++i) {
-                let face = faces.get(i);
-                let point1 = new cv.Point(face.x, face.y);
-                let point2 = new cv.Point(face.x + face.width, face.y + face.height);
-                cv.rectangle(dst, point1, point2, [255, 0, 0, 255]);
+
+            // call image processing function
+
+            const brightest_point = get_brightest_point(frame);
+            console.log(brightest_point);
+            const x = brightest_point['center_x'];
+            const y = brightest_point['center_y'];
+            console.log(x);
+            const c = new Coord(x, y);
+            console.log(c);
+
+            coords.push(c);
+            cur_len++;
+
+            const frames_exceeded = cur_len - frames_tracked;
+
+            if(cur_len > frames_tracked) {
+                remove_front(coords, frames_exceeded);
+                cur_len -= frames_exceeded;
             }
-            cv.imshow("canvas_output", dst);
+
+            for(let i = 1; i < cur_len; i++) {
+                const prev_x = coords[i].x;
+                const prev_y = coords[i].y;
+                const cur_x = coords[i - 1].x;
+                const cur_y = coords[i - 1].y;
+            
+                // Convert the coordinates to cv.Point
+                let prev_point = new cv.Point(prev_x, prev_y);
+                let cur_point = new cv.Point(cur_x, cur_y);
+            
+                cv.line(frame, prev_point, cur_point, color, thickness);
+            }
+
+            //Display the resulting frame
+            cv.imshow('canvas_output', frame);
+
+            // cap.read(src);
+            // src.copyTo(dst);
+            // cv.cvtColor(dst, gray, cv.COLOR_RGBA2GRAY, 0);
+            // for (let i = 0; i < faces.size(); ++i) {
+            //     let face = faces.get(i);
+            //     let point1 = new cv.Point(face.x, face.y);
+            //     let point2 = new cv.Point(face.x + face.width, face.y + face.height);
+            //     cv.rectangle(dst, point1, point2, [255, 0, 0, 255]);
+            // }
+            // cv.imshow("canvas_output", dst);
             // schedule next one.
-            let delay = 1000/FPS - (Date.now() - begin);
-            setTimeout(processVideo, delay);
+            if (keepRunning) {
+                let delay = 1000/FPS - (Date.now() - begin);
+                setTimeout(processVideo, delay);
+            }
         }
     }
     // Remove the event listener after it's been executed.
