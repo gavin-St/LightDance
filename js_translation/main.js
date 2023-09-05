@@ -139,7 +139,7 @@ function opencvReadyHandler() {
 
             //Display the resulting frame
             cv.imshow('canvas_output', frame);
-
+            frame.delete();
             // cap.read(src);
             // src.copyTo(dst);
             // cv.cvtColor(dst, gray, cv.COLOR_RGBA2GRAY, 0);
