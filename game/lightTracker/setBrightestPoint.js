@@ -1,7 +1,7 @@
 import getBrightestPoint from "./detectLight.js";
 
 
-const FPS = 24;
+const FPS = 30;
 let src, dst, gray, cap;
 
 let color;
@@ -41,8 +41,8 @@ function opencvReadyHandler() {
     console.log('OpenCV is now ready!');
     let video = document.getElementById("cam_input"); // video is the id of video tag
     console.log(video);
-    video.width = window.innerWidth;
-    video.height = window.innerHeight;
+    video.width = window.innerWidth / 4;
+    video.height = window.innerHeight / 4;
     navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     .then(function(stream) {
         video.srcObject = stream;
@@ -114,8 +114,8 @@ function opencvReadyHandler() {
             }
 
             const coord = new Coord(xPoint, yPoint);
-            cursorX = coord.x;
-            cursorY = coord.y;
+            cursorX = coord.x * (window.innerWidth / video.width);
+            cursorY = coord.y * (window.innerHeight / video.height);
             console.log(`${xPoint}, ${yPoint}`);
 
             coords.push(coord);

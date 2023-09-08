@@ -313,7 +313,7 @@ planeWidth = (generator.blockGenerationBorders.endX - generator.blockGenerationB
 
 function animate() {
     requestAnimationFrame(animate);
-    generator.moveAllCubes(0.02);
+    generator.moveAllCubes(0.05);
     generator.destroyPastBlocks();
     generator.checkInRange();
     generator.checkBreakability();
