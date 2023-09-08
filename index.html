@@ -8,18 +8,38 @@
   </head>
   <body>
     <canvas id="app"></canvas>
-    <div id = "title">Title Placeholder</div>
+    <div id = "title">Blade Dance</div>
 
     <div id = "main buttons">
       <div id="button1" class="button">
         <a href="game">Play</a>
       </div>
-      <div id="button2" class="button">
-        <a href="custom">Custom Levels</a>
+      <!-- <div id="button2" class="button">
+        <a href="custom">Select Levels</a>
+      </div> -->
+    </div>
+    <!-- <div id="level"></div> -->
+    <div id="select-level">
+      <label id="level-label">Level: </label>
+      <select id="choose-map">
+        <option id="option" value="random">Random</option>
+        <option id="option" value="testing_copy.json">Level 1</option>
+      </select>
+    </div>
+    <h3 id="add-title">Add a Map</h3>
+    <div id="add-map">
+      <div id="file-name">
+        <label>Name of Map:</label>
+        <input type="text" id="map_name">
       </div>
-      <div id="button3" class="button">
-        Settings
+      <div id="file-upload">
+        <input type="file" id="map_file">
+        <button id="submit_map">Submit</button>
       </div>
+      <div class="scripts">
+    </div>
+    <p id="error-message"></p>
+      <script src="custom/addMap.js"></script>
     </div>
   </body>
 </html>

@@ -149,7 +149,7 @@ class BlockGenerator {
     // generates a block
     // rotation is in radians
     generateBlock(x = 0, y = 0, rotation = 0, direction = 0) {
-        // console.log(`direction: ${direction}`);
+        if([0, 1, 2, 3].indexOf(direction) == -1) direction = 0;
         // rotation = 0;
         this.blockArray.push();
         if (x < this.blockGenerationBorders.beginX) {
