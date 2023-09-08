@@ -3,9 +3,4 @@ function initializeCV() {
         setTimeout(initializeCV, 50);
         return;
     }
-    cv.onRuntimeInitialized = function() {
-        const event = new Event('opencvReady');
-        document.dispatchEvent(event);
-
-    }
 }

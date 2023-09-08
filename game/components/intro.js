@@ -1,13 +1,12 @@
-import getBrightestPoint from "./detectLight.js";
-
+import getBrightestPoint from "../lightTracker/detectLight.js";
 
 const FPS = 30;
-let src, dst, gray, cap;
-
-let color;
 const thickness = 9;
 // the number of recent frames to keep the movement line on for
 const framesTracked = 10;
+
+let src, dst, gray, cap;
+let color;
 let curLen = 0;
 const coords = [];
 
@@ -18,7 +17,7 @@ class Coord {
     }
 }
 
-//remove first n elements from arr
+// remove first n elements from arr
 function remove_front(arr, n) {
     if (arr.length < n) {
         return [];
@@ -30,19 +29,32 @@ function remove_front(arr, n) {
     return arr;
 }
 
+
+// 1. Display the title of a level on screen for 5 seconds.
+function showLevelTitle(title) {
+    const titleElement = document.getElementById("level_title");
+    titleElement.innerHTML = title; 
+
+    setTimeout(() => {
+        titleElement.innerHTML = "";
+        const event = new Event('titleDone');
+        document.dispatchEvent(event);
+    }, 5000);
+}
+
+// determines if loop keeps running
 let keepRunning = true;
 document.addEventListener('keydown', function(event) {
-    if (event.key === 'q' || event.keyCode === 81) { // 81 is the keycode for "q"
+    if (event.key === 'q' || event.keyCode === 81) { 
         keepRunning = false;
     }
 });
 
-function opencvReadyHandler() {
-    console.log('OpenCV is now ready!');
-    let video = document.getElementById("cam_input"); // video is the id of video tag
+function createVideo() {
+    let video = document.getElementById("cam_input");
     console.log(video);
-    video.width = window.innerWidth / 4;
-    video.height = window.innerHeight / 4;
+    video.width = window.innerWidth / 2;
+    video.height = window.innerHeight / 2;
     navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     .then(function(stream) {
         video.srcObject = stream;
@@ -61,7 +73,7 @@ function opencvReadyHandler() {
         let videoHeight = video.videoHeight;
 
         if (videoWidth > 0 && videoHeight > 0) {
-            console.log(videoWidth, videoHeight)
+            // console.log(videoWidth, videoHeight)
             src = new cv.Mat(videoHeight, videoWidth, cv.CV_8UC4);
             dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
             gray = new cv.Mat();
@@ -88,7 +100,6 @@ function opencvReadyHandler() {
             // console.log(src.size());
 
             let frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
-
             cap.read(frame);
 
             if (!frame) {
@@ -97,11 +108,11 @@ function opencvReadyHandler() {
             }
 
             // call image processing function
-
             const brightestPoint = getBrightestPoint(frame);
-            let xPoint = brightestPoint['center_x']; // reflect across center of video
+            let xPoint = brightestPoint['center_x']; 
             let yPoint = brightestPoint['center_y'];
 
+            // handle out of bounds
             if (xPoint > video.width) {
                 xPoint = video.width;
             } else if (xPoint < 0) {
@@ -114,6 +125,7 @@ function opencvReadyHandler() {
             }
 
             const coord = new Coord(xPoint, yPoint);
+            // reflect across center of video capture
             cursorX = window.innerWidth - coord.x * (window.innerWidth / video.width);
             cursorY = coord.y * (window.innerHeight / video.height);
             console.log(`${xPoint}, ${yPoint}`);
@@ -121,8 +133,8 @@ function opencvReadyHandler() {
             coords.push(coord);
             curLen++;
 
+            // Draw indicator
             const framesExceeded = curLen - framesTracked;
-
             if (curLen > framesTracked) {
                 remove_front(coords, framesExceeded);
                 curLen -= framesExceeded;
@@ -137,11 +149,10 @@ function opencvReadyHandler() {
                 // Convert the coordinates to cv.Point
                 let prevPoint = new cv.Point(prevX, prevY);
                 let curPoint = new cv.Point(curX, curY);
-            
                 cv.line(frame, prevPoint, curPoint, color, thickness);
             }
 
-            //Display the resulting frame
+            // Display the resulting frame
             cv.imshow('canvas_output', frame);
             frame.delete();
             // check next frame
@@ -149,11 +160,21 @@ function opencvReadyHandler() {
                 let delay = 1000/FPS - (Date.now() - begin);
                 setTimeout(processVideo, delay);
             }
+            else {
+                src.delete();
+                dst.delete();
+                gray.delete();
+                console.log("h")
+                const event = new Event('introDone');
+                document.dispatchEvent(event);
+            }
         }
     }
     // Remove the event listener after it's been executed.
-    document.removeEventListener('opencvReady', opencvReadyHandler);
-    // schedule first one.
+    document.removeEventListener('titleDone', createVideo);
 }
 
-document.addEventListener('opencvReady', opencvReadyHandler);
+showLevelTitle('Level 1');
+document.addEventListener('titleDone', createVideo);
+
+

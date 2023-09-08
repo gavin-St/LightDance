@@ -15,13 +15,15 @@
 		<button id="move_block" type="button" class="button0">Randomly Add a Block</button>
 		<p id="cursor_coordinates" class="text0"></p>
 		<p id="clock" class="text0">h</p>
+		<p id="level_title" class="h1"></p>
 		<div>
 			<video id="cam_input" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" height="480" width="640" style="display:block; margin-bottom: 20px;"></video>
-    		<canvas id="canvas_output" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);"></canvas>
+    		<canvas id="canvas_output" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" height="480" width="640"></canvas>
 		</div>
 	</div>
 	<div class="scripts">
-		<script src="intro.js"></script>
+		<script src="lightTracker/initializeCV.js"></script>
+		<script src="components/intro.js" type = "module"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
 		<script>
 			let camera, renderer;
@@ -33,11 +35,10 @@
 		</script>
 		<script src="utils/initializeScene.js"></script> 
 		<script src="components/light.js"></script>
-		<script type="module" src="components/block.js"></script>
-		<script type="module" src="components/tracker.js"></script>
+		<script src="components/block.js" type="module"></script>
+		<script src="components/tracker.js" type="module"></script>
 		<script src="utils/generateBlocks.js"></script>
-		<script src="lightTracker/initializeCV.js"></script>
-		<script type="module" src="lightTracker/setBrightestPoint.js"></script>
+		<script src="lightTracker/findLightCoords.js" type="module"></script>
 	</div>
 </body>
 </html>

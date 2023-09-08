@@ -44,3 +44,12 @@ canvas {
     margin: 0;
     padding: 0;
 }
+
+.h1 {
+    color: black;
+    display: block;
+    font-family: "OCR A Std", monospace;
+    font-size: 100px;
+    margin: 0;
+    padding: 0;
+}
