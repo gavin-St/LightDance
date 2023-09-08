@@ -12,7 +12,9 @@
 
     <div id = "main buttons">
       <div id="button1" class="button">
-        <a href="game">Play</a>
+        <form>
+          <button class="play_button" type="submit" formaction="game">Play!1!111!</button>
+        </form>
       </div>
       <!-- <div id="button2" class="button">
         <a href="custom">Select Levels</a>
@@ -39,7 +41,21 @@
       <div class="scripts">
     </div>
     <p id="error-message"></p>
+    <div id="background_animation">
+    </div>
+    <div class="scripts">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
+      <script>
+        let backgroundScene = {
+            "scene": null
+        };
+        let camera, renderer;
+      </script>
       <script src="custom/addMap.js"></script>
+      <script src="initializeBackgroundScene.js"></script>
+      <script src="backgroundLight.js"></script>
+      <script type="module" src="backgroundAnimation.js"></script>
+    </div>
     </div>
   </body>
 </html>

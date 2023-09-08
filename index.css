@@ -14,17 +14,33 @@
 	text-align: center;
 	z-index: 100;
 	display: block;
-    color: black;
+    color: white;
 	font-family: "OCR A Std", monospace;
 	font-size: 80px;
 }
 
 
-.button {
+/* .play_button {
     color: black;
     display: block;
 	font-family: "OCR A Std", monospace;
 	font-size: 40px;
+} */
+
+.play_button {
+	background: blue;
+	color: white;
+	font-size: 40px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	transition: background 0.5s ease-in-out;
+}
+  
+.play_button:hover {
+	/*background: linear-gradient(to left top, #358b38, #7be280); */
+	background: rgb(52, 181, 52);
 }
 
 #button1 {
@@ -55,7 +71,7 @@
 	align-items: center; 
 	justify-content: center; 
 	margin-top: 200px; 
-	color: black;
+	color: white;
 	font-family: "OCR A Std", monospace;
 	font-size: 40px;
 }
@@ -71,7 +87,7 @@
 }
 
 #option {
-	color: black;
+	color: white;
 	font-family: "OCR A Std", monospace;
 }
 
@@ -87,7 +103,7 @@
 	display: flex;
 	align-items: center; 
 	justify-content: center; 
-	color: black;
+	color: white;
 	font-family: "OCR A Std", monospace;
 	font-size: 40px;
 	display: flex;
@@ -109,7 +125,14 @@ button {
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    color: black;
+    color: white;
 	font-family: "OCR A Std", monospace;
+
+}
+
+#background_animation {
+	position: fixed;
+	z-index: -1;
+	top: 0%;
 
 }

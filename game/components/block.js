@@ -1,13 +1,9 @@
 import { getX, getY } from "../utils/getWorldCoordinates.js";
 
-let blockGeometry, blockMaterial;
-
-const makeBlockButton = document.querySelector("#move_block");
-
-class Block {
+export class Block {
     targetSquare;
     constructor(sceneObject, mesh, x, y, z, rotation, direction, width, height, depth, rotatePoint) {
-        console.log(sceneObject);
+        //console.log(sceneObject);
         this.sceneObject = sceneObject;
         this.mesh = mesh;
 
@@ -50,7 +46,7 @@ class Block {
         let squareMesh = new THREE.Mesh(squareGeometry, squareMaterial);
         squareMesh.visible = false;
         this.targetSquare = squareMesh;
-        console.log(this.sceneObject);
+        //console.log(this.sceneObject);
         this.sceneObject.scene.add(this.targetSquare);
     }
     #directionIndicator() {
@@ -89,7 +85,7 @@ class Block {
     }
 }
 
-class BlockGenerator {
+export class BlockGenerator {
     numCubes; // number of cubes in the scene
     blockArray; // array of Block(), tracking all active blocks in the scene
     blockGenerationBorders; // obj of [beginX, endX, beginY, endY], the borders such that any block generated outside of these will be forced inside
@@ -162,6 +158,7 @@ class BlockGenerator {
         } else if (y > this.blockGenerationBorders.endY) {
             y = this.blockGenerationBorders.endY;
         }
+        console.log("IN GEN BLOCK");
         console.log(this.sceneObject);
         this.blockArray.push(new Block(this.sceneObject, new THREE.Mesh(this.#blockGeometry, this.#blockMaterial), x, y, this.#blockGenerationZCoord, rotation, direction, this.#blockDimensions[0], this.#blockDimensions[0], this.#blockDimensions[0], this._rotatePoint));
         this.numCubes++;
@@ -200,7 +197,7 @@ class BlockGenerator {
     }
 }
 
-class BreakableBlockGenerator extends BlockGenerator {
+export class BreakableBlockGenerator extends BlockGenerator {
     #inRangeCenterZCoord; // center Z coordinate of the in-range region for blocks
     #inRangeRadius; // the radius of the in-range region centered at inRangeCenterZCoord
     #beginInRange; // start of in-range region (z-coord)
@@ -287,43 +284,6 @@ class BreakableBlockGenerator extends BlockGenerator {
         }
     }
 }
-
-// console.log("SCENE OBJ");
-// console.log(mainScene);
-
-generator = new BreakableBlockGenerator(
-    mainScene, // sceneObject
-    -10, // blockGenerationZCoord
-    10, // despawnLimit
-    {beginX: -4, endX: 4, beginY: -4, endY: 4}, // blockGenerationBorders
-    [2, 2, 2], // blockDimensions
-    0, // inRangeCenterZCoord
-    1, // inRangeRadius
-    0.05 // errorMargin
-);
-
-// randomly generates a block on a circle with radius blockGenerationRadius
-function randomlyGenerateBlock() {
-    let tuple = generator.generatePoint(2);
-    generator.generateBlock(tuple[0], tuple[1], tuple[2], tuple[3]);
-}
-
-// imaginary plane at which cursor sits on to target blocks, *2.4 since it will be double the radius + a bit more
-planeHeight = (generator.blockGenerationBorders.endY - generator.blockGenerationBorders.beginY) * 2;
-planeWidth = (generator.blockGenerationBorders.endX - generator.blockGenerationBorders.beginX) * 2;
-
-function animate() {
-    requestAnimationFrame(animate);
-    generator.moveAllCubes(0.05);
-    generator.destroyPastBlocks();
-    generator.checkInRange();
-    generator.checkBreakability();
-    renderer.render(mainScene.scene, camera);
-}
-
-makeBlockButton.addEventListener('click', randomlyGenerateBlock);
-animate();
-
 
 
 
