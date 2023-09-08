@@ -99,7 +99,7 @@ function opencvReadyHandler() {
             // call image processing function
 
             const brightestPoint = getBrightestPoint(frame);
-            let xPoint = video.width - brightestPoint['center_x']; // reflect across center of video
+            let xPoint = brightestPoint['center_x']; // reflect across center of video
             let yPoint = brightestPoint['center_y'];
 
             if (xPoint > video.width) {
@@ -114,7 +114,7 @@ function opencvReadyHandler() {
             }
 
             const coord = new Coord(xPoint, yPoint);
-            cursorX = coord.x * (window.innerWidth / video.width);
+            cursorX = window.innerWidth - coord.x * (window.innerWidth / video.width);
             cursorY = coord.y * (window.innerHeight / video.height);
             console.log(`${xPoint}, ${yPoint}`);
 
