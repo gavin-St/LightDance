@@ -147,6 +147,7 @@ class BlockGenerator {
 
 
     // generates a block
+    // rotation is in radians
     generateBlock(x = 0, y = 0, rotation = 0, direction = 0) {
         // console.log(`direction: ${direction}`);
         // rotation = 0;
@@ -290,11 +291,11 @@ class BreakableBlockGenerator extends BlockGenerator {
 // console.log("SCENE OBJ");
 // console.log(mainScene);
 
-let generator = new BreakableBlockGenerator(
+generator = new BreakableBlockGenerator(
     mainScene, // sceneObject
     -10, // blockGenerationZCoord
     10, // despawnLimit
-    {beginX: -5, endX: 5, beginY: -5, endY: 5}, // blockGenerationBorders
+    {beginX: -4, endX: 4, beginY: -4, endY: 4}, // blockGenerationBorders
     [2, 2, 2], // blockDimensions
     0, // inRangeCenterZCoord
     1, // inRangeRadius
@@ -308,8 +309,8 @@ function randomlyGenerateBlock() {
 }
 
 // imaginary plane at which cursor sits on to target blocks, *2.4 since it will be double the radius + a bit more
-planeHeight = (generator.blockGenerationBorders.endY - generator.blockGenerationBorders.beginY) / 2 * 2.4;
-planeWidth = (generator.blockGenerationBorders.endX - generator.blockGenerationBorders.beginX) / 2 * 2.4;
+planeHeight = (generator.blockGenerationBorders.endY - generator.blockGenerationBorders.beginY) * 2;
+planeWidth = (generator.blockGenerationBorders.endX - generator.blockGenerationBorders.beginX) * 2;
 
 function animate() {
     requestAnimationFrame(animate);

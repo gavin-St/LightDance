@@ -4,6 +4,7 @@ let clock = new THREE.Clock(true);
 
 // [time (sec), x, y, rotation]
 let map = sessionStorage.getItem("Active Map") ? JSON.parse(sessionStorage.getItem(sessionStorage.getItem("Active Map"))) : [];
+const degToRad = Math.PI / 180;
 
 function sortMap() {
     // sort block spawn input by reverse in terms of time
@@ -33,7 +34,7 @@ function frame() {
     curTime = clock.getElapsedTime();
     timeDisplay.innerHTML = `Seconds Passed: ${curTime}`;
     while (curBlock && curTime >= curBlock.time) {
-        generator.generateBlock(curBlock.x, curBlock.y, curBlock.rotation, -1);
+        generator.generateBlock(curBlock.x, curBlock.y, curBlock.rotation * Math.PI / 180);
         map.pop();
         if (map.length === 0) {
             console.log("EMPTY");

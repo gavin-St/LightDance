@@ -128,7 +128,7 @@ function createVideo() {
             // reflect across center of video capture
             cursorX = window.innerWidth - coord.x * (window.innerWidth / video.width);
             cursorY = coord.y * (window.innerHeight / video.height);
-            console.log(`${xPoint}, ${yPoint}`);
+            //console.log(`${xPoint}, ${yPoint}`);
 
             coords.push(coord);
             curLen++;
@@ -164,7 +164,7 @@ function createVideo() {
                 src.delete();
                 dst.delete();
                 gray.delete();
-                console.log("h")
+                //console.log("h")
                 const event = new Event('introDone');
                 document.dispatchEvent(event);
             }
