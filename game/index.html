@@ -19,7 +19,10 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
 		<script>
 			let windowHeight = window.innerHeight, windowWidth = window.innerWidth;
-			let scene, camera, renderer;
+			let camera, renderer;
+			let mainScene = {
+				"scene": null
+			};
 			let numCubes = 0;
 			let activeCubes = [];
 			let targets = [];
@@ -27,12 +30,10 @@
 			let planeHeight, planeWidth;
 		</script>
 		<script src="initializeScene.js"></script> 
-		<script src="getWorldCoordinates.js"></script>
 		<script src="light.js"></script>
-		<script src="block.js"></script>
-		<script src="trackCursor.js"></script>
+		<script type="module" src="block.js"></script>
+		<script type="module" src="trackCursor.js"></script>
 		<script src="generateBlocks.js"></script>
-		<script src="readFile.js"></script>
 	</div>
 </body>
 </html>

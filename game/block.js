@@ -1,10 +1,14 @@
+import { getX, getY } from "./getWorldCoordinates.js";
+
 let blockGeometry, blockMaterial;
 
 const makeBlockButton = document.querySelector("#move_block");
 
 class Block {
     targetSquare;
-    constructor(mesh, x, y, z, rotation, direction, width, height, depth, rotatePoint) {
+    constructor(sceneObject, mesh, x, y, z, rotation, direction, width, height, depth, rotatePoint) {
+        console.log(sceneObject);
+        this.sceneObject = sceneObject;
         this.mesh = mesh;
 
         this.mesh.geometry.computeBoundingBox();
@@ -46,7 +50,8 @@ class Block {
         let squareMesh = new THREE.Mesh(squareGeometry, squareMaterial);
         squareMesh.visible = false;
         this.targetSquare = squareMesh;
-        scene.add(this.targetSquare);
+        console.log(this.sceneObject);
+        this.sceneObject.scene.add(this.targetSquare);
     }
     #directionIndicator() {
         // Create a yellow material
@@ -73,7 +78,7 @@ class Block {
         const [newX, newY] = this.rotatePoint(centerX, centerY, this.xCoord, this.yCoord, this.mesh.rotation.z);
         indicator.position.set(newX, newY, -9);
 
-        scene.add(indicator);
+        this.sceneObject.scene.add(indicator);
         this.indicator = indicator;
     }
     showTargetSquare(show = true) {
@@ -93,7 +98,9 @@ class BlockGenerator {
     #blockDimensions; // array, [width, height, depth]
     #blockGenerationZCoord; // radius at which to generate blocks (only used for random generation)
     #despawnLimit; // the z coord at which blocks will despawn (to save memory)
-    constructor(blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit) {
+    sceneObject;
+    constructor(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit) {
+        this.sceneObject = sceneObject;
         this.numCubes = 0;
         this.blockArray = [];
         this.blockGenerationBorders = blockGenerationBorders;
@@ -141,7 +148,7 @@ class BlockGenerator {
 
     // generates a block
     generateBlock(x = 0, y = 0, rotation = 0, direction = 0) {
-        console.log(`direction: ${direction}`);
+        // console.log(`direction: ${direction}`);
         // rotation = 0;
         this.blockArray.push();
         if (x < this.blockGenerationBorders.beginX) {
@@ -154,9 +161,10 @@ class BlockGenerator {
         } else if (y > this.blockGenerationBorders.endY) {
             y = this.blockGenerationBorders.endY;
         }
-        this.blockArray.push(new Block(new THREE.Mesh(this.#blockGeometry, this.#blockMaterial), x, y, this.#blockGenerationZCoord, rotation, direction, this.#blockDimensions[0], this.#blockDimensions[0], this.#blockDimensions[0], this._rotatePoint));
+        console.log(this.sceneObject);
+        this.blockArray.push(new Block(this.sceneObject, new THREE.Mesh(this.#blockGeometry, this.#blockMaterial), x, y, this.#blockGenerationZCoord, rotation, direction, this.#blockDimensions[0], this.#blockDimensions[0], this.#blockDimensions[0], this._rotatePoint));
         this.numCubes++;
-        scene.add(this.blockArray.at(-1).mesh);
+        this.sceneObject.scene.add(this.blockArray.at(-1).mesh);
     }
     // // randomly generates a block on a circle with radius blockGenerationRadius
     // randomlyGenerateBlock() {
@@ -175,9 +183,9 @@ class BlockGenerator {
     }
     // destroys the block at index
     destroyBlock(index) {
-        scene.remove(this.blockArray[index].targetSquare);
-        scene.remove(this.blockArray[index].indicator);
-        scene.remove(this.blockArray[index].mesh);
+        this.sceneObject.scene.remove(this.blockArray[index].targetSquare);
+        this.sceneObject.scene.remove(this.blockArray[index].indicator);
+        this.sceneObject.scene.remove(this.blockArray[index].mesh);
         this.blockArray.splice(index, 1);
         this.numCubes--;
     }
@@ -197,8 +205,8 @@ class BreakableBlockGenerator extends BlockGenerator {
     #beginInRange; // start of in-range region (z-coord)
     #endInRange; // end of in-range region (z-coord)
     #errorMargin; 
-    constructor(blockGenerationZCoord, despawnLimit, blockGenerationBorders, blockDimensions, inRangeCenterZCoord, inRangeRadius, errorMargin) {
-        super(blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit);
+    constructor(sceneObject, blockGenerationZCoord, despawnLimit, blockGenerationBorders, blockDimensions, inRangeCenterZCoord, inRangeRadius, errorMargin) {
+        super(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit);
         this.#inRangeCenterZCoord = inRangeCenterZCoord;
         this.#inRangeRadius = inRangeRadius;
         this.#beginInRange = inRangeCenterZCoord - inRangeRadius;
@@ -212,7 +220,7 @@ class BreakableBlockGenerator extends BlockGenerator {
             let curXPos = this.blockArray[i].xCoord;
             let curYPos = this.blockArray[i].yCoord;
             //check if cursor is in proper relative position to the block
-            const rotated = this._rotatePoint(getX(cursorX), getY(cursorY), curXPos, curYPos, -this.blockArray[i].mesh.rotation.z);
+            const rotated = this._rotatePoint(getX(cursorX, planeWidth), getY(cursorY, planeHeight), curXPos, curYPos, -this.blockArray[i].mesh.rotation.z);
             const x = rotated[0];
             const y = rotated[1];
             const direction = this.blockArray[i].direction;
@@ -220,34 +228,19 @@ class BreakableBlockGenerator extends BlockGenerator {
             const width = this.blockArray[i].width;
             // console.log(`direction: ${direction}`);
 
-            if ((direction == 0 && y > curYPos + height / 2 - errorMargin) //need cursor to be above
-             || (direction == 1 && x > curXPos + width / 2 - errorMargin) //need cursor to be to the right
-             || (direction == 2 && y < curYPos - height / 2 + errorMargin) //need cursor to be under
-             || (direction == 3 && x < curXPos - width / 2 + errorMargin) //need cursor to be to the left
-             || (this.blockArray[i].breakable && this.blockArray[i].inRange && Math.abs(curXPos - getX(cursorX)) <= width / 2 + errorMargin && Math.abs(curYPos - getY(cursorY)) <= height / 2 + errorMargin) //previously breakable and in box
+            if ((direction == 0 && y > curYPos + height / 2 - this.#errorMargin) //need cursor to be above
+             || (direction == 1 && x > curXPos + width / 2 - this.#errorMargin) //need cursor to be to the right
+             || (direction == 2 && y < curYPos - height / 2 + this.#errorMargin) //need cursor to be under
+             || (direction == 3 && x < curXPos - width / 2 + this.#errorMargin) //need cursor to be to the left
+             || (this.blockArray[i].breakable && this.blockArray[i].inRange && Math.abs(curXPos - getX(cursorX, planeWidth)) <= width / 2 + this.#errorMargin && Math.abs(curYPos - getY(cursorY, planeHeight)) <= height / 2 + this.#errorMargin) //previously breakable and in box
             ) {
                 if(!this.blockArray[i].breakable) {
                     console.log("just became breakable");
-                    // console.log(`x ${x}`);
-                    // console.log(`y ${y}`);
-                    // console.log(`curXPos ${curXPos}`);
-                    // console.log(`curYPos ${curYPos}`);
-                    // console.log(`width ${width}`);
-                    // console.log(`height ${height}`);
                 }
                 this.blockArray[i].breakable = true;
             } else {
                 if(this.blockArray[i].breakable) {
                     console.log("not breakable anymore");
-                    // console.log(`direction: ${direction}`);
-                    // console.log(`x ${x}`);
-                    // console.log(`y ${y}`);
-                    // console.log(`curXPos ${curXPos}`);
-                    // console.log(`curYPos ${curYPos}`);
-                    // console.log(`width ${width}`);
-                    // console.log(`height ${height}`);
-                    // console.log(`x diff ${Math.abs(curXPos - getX(cursorX))}`);
-                    // console.log(`y diff ${Math.abs(curYPos - getY(cursorY))}`);
                 }
                 this.blockArray[i].breakable = false;
             }
@@ -269,7 +262,7 @@ class BreakableBlockGenerator extends BlockGenerator {
                     this.blockArray[i].showTargetSquare(true);
                 }
                 this.blockArray[i].inRange = true;
-                const rotated = this._rotatePoint(getX(cursorX), getY(cursorY), curXPos, curYPos, -this.blockArray[i].mesh.rotation.z);
+                const rotated = this._rotatePoint(getX(cursorX, planeWidth), getY(cursorY, planeHeight), curXPos, curYPos, -this.blockArray[i].mesh.rotation.z);
                 const x = rotated[0];
                 const y = rotated[1];
                 const direction = this.blockArray[i].direction;
@@ -294,14 +287,18 @@ class BreakableBlockGenerator extends BlockGenerator {
     }
 }
 
+// console.log("SCENE OBJ");
+// console.log(mainScene);
+
 let generator = new BreakableBlockGenerator(
-    blockGenerationZCoord = -10, 
-    despawnLimit = 10, 
-    blockGenerationBorders = {beginX: -5, endX: 5, beginY: -5, endY: 5}, 
-    blockDimensions = [2, 2, 2], 
-    inRangeCenterZCoord = 0, 
-    inRangeRadius = 1,
-    errorMargin = 0.05
+    mainScene, // sceneObject
+    -10, // blockGenerationZCoord
+    10, // despawnLimit
+    {beginX: -5, endX: 5, beginY: -5, endY: 5}, // blockGenerationBorders
+    [2, 2, 2], // blockDimensions
+    0, // inRangeCenterZCoord
+    1, // inRangeRadius
+    0.05 // errorMargin
 );
 
 // randomly generates a block on a circle with radius blockGenerationRadius
@@ -320,7 +317,7 @@ function animate() {
     generator.destroyPastBlocks();
     generator.checkInRange();
     generator.checkBreakability();
-    renderer.render(scene, camera);
+    renderer.render(mainScene.scene, camera);
 }
 
 makeBlockButton.addEventListener('click', randomlyGenerateBlock);
