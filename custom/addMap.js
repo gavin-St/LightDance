@@ -75,6 +75,14 @@ document.getElementById(`submit_map`).addEventListener("click", () => {
             sessionStorage.setItem(mapName, content); // error with this save.
             customMaps.push(mapName);
             sessionStorage.setItem("Custom Maps", JSON.stringify(customMaps));
+            errorElement.textContent = "Successfully Uploaded Map!";
+            document.getElementById(`map_name`).value = "";
+            const fileInput = document.getElementById("map_file");
+            const newFileInput = document.createElement("input");
+            newFileInput.type = "file";
+            newFileInput.id = "map_file";
+
+            fileInput.parentNode.replaceChild(newFileInput, fileInput);
         } else {
             errorElement.textContent = "Invalid File!"
             return;
