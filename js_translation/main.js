@@ -1,4 +1,4 @@
-import  openCamera  from "./open_camera.js";
+// import  openCamera  from "./open_camera.js";
 import  get_brightest_point  from "./detect_light.js";
 
 let src, dst, gray, cap, faces;
