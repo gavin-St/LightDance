@@ -7,6 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<link rel="stylesheet" href="styles.css"> 
+	<script async src="lightTracker/opencv.js" onload="initializeCV()"></script>
 </head>
 <body>
 	<div class="debug_tools">
@@ -14,26 +15,28 @@
 		<button id="move_block" type="button" class="button0">Randomly Add a Block</button>
 		<p id="cursor_coordinates" class="text0"></p>
 		<p id="clock" class="text0">h</p>
+		<div>
+			<video id="cam_input" height="480" width="640" style="display:block; margin-bottom: 20px;"></video>
+    		<canvas id="canvas_output"></canvas>
+		</div>
 	</div>
 	<div class="scripts">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
 		<script>
-			let windowHeight = window.innerHeight, windowWidth = window.innerWidth;
 			let camera, renderer;
 			let mainScene = {
 				"scene": null
 			};
-			let numCubes = 0;
-			let activeCubes = [];
-			let targets = [];
-			let cursorX, cursorY;
+			let cursorX = 0, cursorY = 0;
 			let planeHeight, planeWidth;
 		</script>
-		<script src="initializeScene.js"></script> 
-		<script src="light.js"></script>
-		<script type="module" src="block.js"></script>
-		<script type="module" src="trackCursor.js"></script>
-		<script src="generateBlocks.js"></script>
+		<script src="utils/initializeScene.js"></script> 
+		<script src="components/light.js"></script>
+		<script type="module" src="components/block.js"></script>
+		<script type="module" src="components/tracker.js"></script>
+		<script src="utils/generateBlocks.js"></script>
+		<script src="lightTracker/initializeCV.js"></script>
+		<script type="module" src="lightTracker/setBrightestPoint.js"></script>
 	</div>
 </body>
 </html>
