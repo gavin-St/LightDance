@@ -130,6 +130,14 @@ button {
 
 }
 
+#map_name {
+	color: black;
+}
+
+#submit_map {
+	color: black;
+}
+
 #background_animation {
 	position: fixed;
 	z-index: -1;
