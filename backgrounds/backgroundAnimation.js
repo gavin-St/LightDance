@@ -1,4 +1,4 @@
-import { BlockGenerator } from "./game/components/block.js";
+import { BlockGenerator } from "../game/components/block.js";
 
 const generationFrequency = 2000;
 
