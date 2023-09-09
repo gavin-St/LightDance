@@ -41,6 +41,7 @@
 .play_button:hover {
 	/*background: linear-gradient(to left top, #358b38, #7be280); */
 	background: rgb(52, 181, 52);
+	cursor: pointer;
 }
 
 #button1 {

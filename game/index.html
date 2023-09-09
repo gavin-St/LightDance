@@ -6,7 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	<link rel="stylesheet" href="styles.css"> 
+	<link rel="stylesheet" href="index.css"> 
 	<script async src="lightTracker/opencv.js" onload="initializeCV()"></script>
 </head>
 <body>
@@ -18,14 +18,14 @@
 	</div>
 	<div class="titles">
 		<p id="level_title" class="h1"></p>
-		<div>
-			<video id="cam_input" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" height="480" width="640" style="display:block; margin-bottom: 20px;"></video>
-    		<canvas id="canvas_output" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" height="480" width="640"></canvas>
-		</div>
 	</div>
 	<div class="hints">
 		<p id="explanation" class="text0">Use your phone flashlight or any other source of bright light to move your cursor! Make sure our green circle correctly traces your movements before playing!</p>
 		<p id="skip" class="text0">Press c to skip the tutorial</p>
+	</div>
+	<div class="video">
+		<video id="cam_input" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" height="480" width="640" style="display:block; margin-bottom: 20px;"></video>
+		<canvas id="canvas_output" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" height="480" width="640"></canvas>
 	</div>
 	<div class="scripts">
 		
