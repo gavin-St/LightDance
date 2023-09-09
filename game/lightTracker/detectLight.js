@@ -1,4 +1,6 @@
 const pi = 3.1415926535897932384626;
+const intensityThreshold = 200; 
+const sizeThreshold = 5000; 
 
 function circularity(area, perimeter) {
     return (4 * pi * area) / (perimeter * perimeter);
@@ -14,6 +16,12 @@ const getBrightestPoint = (img) => {
 
     const min_max_info = cv.minMaxLoc(blurred);
     const brightest_value = min_max_info.maxVal;
+    console.log(brightest_value)    
+
+    if (brightest_value < intensityThreshold) {
+        console.log("Light intensity below threshold");
+        return null;  // or however you want to handle this
+    }
 
     // any pixel >= 200 is set to white (255) and any < 200 are set to black
     let brightest_only = new cv.Mat();
@@ -35,17 +43,30 @@ const getBrightestPoint = (img) => {
     let most_circ_contour = new cv.Mat();
 
     //find contour with max circularity
-
+    let validContourFound = false;
     for(let i = 0; i < contours.size(); i++) {
         const contour = contours.get(i);
         const area = cv.contourArea(contour);
+        console.log("area",area)
+        // Check area size
+        // if (area > sizeThreshold) {
+        //     console.log("AREA TOO BIG")
+        //     continue;
+        // }
+
         const perim = cv.arcLength(contour, true);
         const circ = circularity(area, perim);
         if(circ > max_circ || i == 0) {
             most_circ_contour = contour;
             max_circ = circ;
+            validContourFound = true;
         }
     }
+    // Check if no valid contour was found
+    if (!validContourFound) {
+        return null;
+    }
+
 
     //centroid of the most circular moment
     const img_moment = cv.moments(most_circ_contour);
@@ -58,6 +79,7 @@ const getBrightestPoint = (img) => {
         centerY = Math.floor(img_moment["m01"]/img_moment["m00"]);
     } else {
         console.log("ERROR");
+        return null;
     }
 
     const brightest_point_info = {"center_x": centerX, "center_y": centerY};

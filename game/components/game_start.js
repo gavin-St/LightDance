@@ -109,8 +109,21 @@ function createVideo() {
 
             // call image processing function
             const brightestPoint = getBrightestPoint(frame);
-            let xPoint = brightestPoint['center_x']; 
-            let yPoint = brightestPoint['center_y'];
+            let xPoint = 0;
+            let yPoint = 0;
+            // Check if brightestPoint is null and handle it
+            if (brightestPoint === null) {
+                if (coords.length > 0) { 
+                    // Use the last point in the coords array
+                    xPoint = coords[coords.length - 1].x;
+                    yPoint = coords[coords.length - 1].y;
+                } else {
+                    // Handle cases where coords array is empty (you can set default values or handle it differently)
+                }
+            } else {
+                xPoint = brightestPoint['center_x'];
+                yPoint = brightestPoint['center_y'];
+            }
 
             // handle out of bounds
             if (xPoint > video.width) {
