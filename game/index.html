@@ -14,7 +14,7 @@
 		<a id="test_button" href="../">Back</a>
 		<button id="move_block" type="button" class="button0">Randomly Add a Block</button>
 		<p id="cursor_coordinates" class="text0"></p>
-		<p id="clock" class="text0">h</p>
+		<p id="clock" class="text0"></p>
 	</div>
 	<div class="titles">
 		<p id="level_title" class="h1"></p>
@@ -22,6 +22,10 @@
 			<video id="cam_input" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" height="480" width="640" style="display:block; margin-bottom: 20px;"></video>
     		<canvas id="canvas_output" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);" height="480" width="640"></canvas>
 		</div>
+	</div>
+	<div class="hints">
+		<p id="explanation" class="text0">Use your phone flashlight or any other source of bright light to move your cursor! Make sure our green circle correctly traces your movements before playing!</p>
+		<p id="skip" class="text0">Press c to skip the tutorial</p>
 	</div>
 	<div class="scripts">
 		
@@ -36,7 +40,7 @@
 			let cursorX = 0, cursorY = 0;
 			let planeHeight, planeWidth;
 		</script>
-		<script src="handleMainGame.js" type="module"></script>
+		<script src="handleGameLoop.js" type="module"></script>
 		<script src="components/game_over.js" type = "module"></script>
 	</div>
 </body>

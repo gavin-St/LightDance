@@ -45,7 +45,7 @@ function showLevelTitle(title) {
 // determines if loop keeps running
 let keepRunning = true;
 document.addEventListener('keydown', function(event) {
-    if (event.key === 'c') { 
+    if (event.key === 'c' || event.key === 'C') { 
         keepRunning = false;
     }
 });
@@ -162,7 +162,11 @@ function createVideo() {
                 src.delete();
                 dst.delete();
                 gray.delete();
-                //console.log("h")
+                const hint1 = document.getElementById("explanation");
+                hint1.innerHTML = "";
+                const hint2 = document.getElementById("skip");
+                hint2.innerHTML = "Press c to toggle mini-cam";
+
                 const event = new Event('introDone');
                 document.dispatchEvent(event);
             }

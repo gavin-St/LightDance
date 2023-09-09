@@ -32,7 +32,7 @@ function remove_front(arr, n) {
 // determines if loop keeps running
 let keepRunning = true;
 document.addEventListener('keydown', function(event) {
-    if (event.key === 'w') { 
+    if (event.key === 'q' || event.key === 'Q') { 
         keepRunning = false;
     }
 });
@@ -144,7 +144,7 @@ function processCoords() {
             // Display the resulting frame
             cv.imshow('canvas_output', frame);
             frame.delete();
-            // check next frame
+            // Check next frame
             if (keepRunning) {
                 let delay = 1000/FPS - (Date.now() - begin);
                 setTimeout(processFrame, delay);
@@ -153,6 +153,9 @@ function processCoords() {
                 src.delete();
                 dst.delete();
                 gray.delete();
+
+                const event = new Event('gameDone');
+                document.dispatchEvent(event);
             }
         }
     }
