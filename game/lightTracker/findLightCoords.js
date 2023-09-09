@@ -32,13 +32,13 @@ function remove_front(arr, n) {
 // determines if loop keeps running
 let keepRunning = true;
 document.addEventListener('keydown', function(event) {
-    if (event.key === 'w' || event.keyCode === 81) { 
+    if (event.key === 'w') { 
         keepRunning = false;
     }
 });
 
-// runs after openCV has been loaded
-function opencvReadyHandler() {
+// main function to map coords
+function processCoords() {
     console.log('OpenCV is now ready!');
     let video = document.getElementById("cam_input");
     console.log(video);
@@ -62,7 +62,7 @@ function opencvReadyHandler() {
         let videoHeight = video.videoHeight;
 
         if (videoWidth > 0 && videoHeight > 0) {
-            console.log(videoWidth, videoHeight)
+            console.log(videoWidth, videoHeight);
             src = new cv.Mat(videoHeight, videoWidth, cv.CV_8UC4);
             dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
             gray = new cv.Mat();
@@ -75,12 +75,12 @@ function opencvReadyHandler() {
         video.removeEventListener('playing', onVideoPlaying);
 
         // schedule first frame processing.
-        setTimeout(processVideo, 10);
+        setTimeout(processFrame, 10);
     }
 
     video.addEventListener('playing', onVideoPlaying);
 
-    function processVideo() {
+    function processFrame() {
         if (src) {
             let begin = Date.now();
             // console.log(src)
@@ -147,7 +147,7 @@ function opencvReadyHandler() {
             // check next frame
             if (keepRunning) {
                 let delay = 1000/FPS - (Date.now() - begin);
-                setTimeout(processVideo, delay);
+                setTimeout(processFrame, delay);
             }
             else {
                 src.delete();
@@ -156,8 +156,8 @@ function opencvReadyHandler() {
             }
         }
     }
-    // Remove the event listener after it's been executed.
-    document.removeEventListener('introDone', opencvReadyHandler);
+
+    // document.removeEventListener('introDone', processCoords);
 }
 
-document.addEventListener('introDone', opencvReadyHandler);
+processCoords();

@@ -126,8 +126,6 @@ function createVideo() {
 
             const coord = new Coord(xPoint, yPoint);
             // reflect across center of video capture
-            cursorX = window.innerWidth - coord.x * (window.innerWidth / video.width);
-            cursorY = coord.y * (window.innerHeight / video.height);
             //console.log(`${xPoint}, ${yPoint}`);
 
             coords.push(coord);
