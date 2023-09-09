@@ -52,7 +52,7 @@ function processCoords() {
     .catch(function(err) {
         console.log("An error occurred! " + err);
     });
-    console.log(cv);
+    // console.log(cv);
     
     color = new cv.Scalar(0, 255, 0, 255);
 
@@ -62,7 +62,7 @@ function processCoords() {
         let videoHeight = video.videoHeight;
 
         if (videoWidth > 0 && videoHeight > 0) {
-            console.log(videoWidth, videoHeight);
+            // console.log(videoWidth, videoHeight);
             src = new cv.Mat(videoHeight, videoWidth, cv.CV_8UC4);
             dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
             gray = new cv.Mat();

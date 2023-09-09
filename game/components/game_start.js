@@ -39,13 +39,13 @@ function showLevelTitle(title) {
         titleElement.innerHTML = "";
         const event = new Event('titleDone');
         document.dispatchEvent(event);
-    }, 5000);
+    }, 3000);
 }
 
 // determines if loop keeps running
 let keepRunning = true;
 document.addEventListener('keydown', function(event) {
-    if (event.key === 'q' || event.keyCode === 81) { 
+    if (event.key === 'c') { 
         keepRunning = false;
     }
 });
