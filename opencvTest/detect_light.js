@@ -15,7 +15,7 @@ const get_brightest_point = (img) => {
     const min_max_info = cv.minMaxLoc(blurred);
     const brightest_value = min_max_info.maxVal;
 
-    console.log(brightest_value);
+    // console.log(brightest_value);
 
     // any pixel >= 200 is set to white (255) and any < 200 are set to black
     let brightest_only = new cv.Mat();

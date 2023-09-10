@@ -24,12 +24,18 @@ planeHeight = (generator.blockGenerationBorders.endY - generator.blockGeneration
 planeWidth = (generator.blockGenerationBorders.endX - generator.blockGenerationBorders.beginX) * 2;
 
 function animate() {
-    requestAnimationFrame(animate);
-    // generator.moveAllCubes(0.05);
-    generator.destroyPastBlocks();
-    generator.checkInRange();
-    generator.checkBreakability();
-    renderer.render(mainScene.scene, camera);
+    const lifeElement = document.getElementById('lives_count');
+    const curLives = lifeElement.textContent.slice(-1);
+    const intValue = curLives.charCodeAt(0) - '0'.charCodeAt(0);
+
+    if(intValue > 0) {
+        requestAnimationFrame(animate);
+        // generator.moveAllCubes(0.05);
+        generator.destroyPastBlocks();
+        generator.checkInRange();
+        generator.checkBreakability();
+        renderer.render(mainScene.scene, camera);
+    }
 }
 
 setInterval(() => {generator.moveAllCubes(0.05)}, 10);

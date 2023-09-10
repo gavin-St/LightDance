@@ -4,7 +4,7 @@ document.addEventListener('gameDone', function() {
     setTimeout(function() {
         window.location.href = '../';
     }, 5000);
-}, {once: true});
+}, {once: true, capture: true});
 
 document.addEventListener('victory', function() {
     const titleElement = document.getElementById("level_title");

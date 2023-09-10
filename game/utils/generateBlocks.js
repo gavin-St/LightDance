@@ -33,12 +33,17 @@ function frame() {
     requestAnimationFrame(frame);
     curTime = clock.getElapsedTime();
     timeDisplay.innerHTML = `Seconds Passed: ${curTime}`;
-    while (curBlock && curTime >= curBlock.time) {
+    const lifeElement = document.getElementById('lives_count');
+    const curLives = lifeElement.textContent.slice(-1);
+    const intValue = curLives.charCodeAt(0) - '0'.charCodeAt(0);
+    while (curBlock && curTime >= curBlock.time && intValue > 0) {
         generator.generateBlock(curBlock.x, curBlock.y, curBlock.rotation * Math.PI / 180);
         map.pop();
         if (map.length === 0) {
             console.log("EMPTY");
             curBlock = null;
+            noMoreBLocks = true;
+            console.log("no more blocks");
             break;
         }
         curBlock = map.at(-1);

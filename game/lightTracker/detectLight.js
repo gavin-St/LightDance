@@ -16,7 +16,7 @@ const getBrightestPoint = (img) => {
 
     const min_max_info = cv.minMaxLoc(blurred);
     const brightest_value = min_max_info.maxVal;
-    console.log(brightest_value)    
+    // console.log(brightest_value)    
 
     if (brightest_value < intensityThreshold) {
         console.log("Light intensity below threshold");

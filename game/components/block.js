@@ -53,8 +53,8 @@ export class Block {
         let centerX = this.xCoord;
         let centerY = this.yCoord;
 
-        const topLeft = this.rotatePoint(centerX - this.width / 2, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z + 0.01);
-        const topRight = this.rotatePoint(centerX + this.width / 2, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z + 0.01);
+        const topLeft = this.rotatePoint(centerX - this.width / 2, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z);
+        const topRight = this.rotatePoint(centerX + this.width / 2, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z);
 
         const triangleGeometry = new THREE.Geometry();
         var v1 = new THREE.Vector3(topLeft[0], topLeft[1], this.mesh.position.z + 1.01);
@@ -68,7 +68,7 @@ export class Block {
         triangleGeometry.computeFaceNormals();
 
         const triangleMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffff00,
+        color: 0x6edbc5,
         side: THREE.DoubleSide
         });
 
@@ -159,8 +159,8 @@ export class BlockGenerator {
         } else if (y > this.blockGenerationBorders.endY) {
             y = this.blockGenerationBorders.endY;
         }
-        console.log("IN GEN BLOCK");
-        console.log(this.sceneObject);
+        // console.log("IN GEN BLOCK");
+        // console.log(this.sceneObject);
         this.blockArray.push(new Block(this.sceneObject, new THREE.Mesh(this.#blockGeometry, this.#blockMaterial), x, y, this.#blockGenerationZCoord, rotation, direction, this.#blockDimensions[0], this.#blockDimensions[0], this.#blockDimensions[0], this._rotatePoint));
         this.numCubes++;
         this.sceneObject.scene.add(this.blockArray.at(-1).mesh);
@@ -187,6 +187,11 @@ export class BlockGenerator {
         this.sceneObject.scene.remove(this.blockArray[index].mesh);
         this.blockArray.splice(index, 1);
         this.numCubes--;
+        totalDestroyed++;
+        if(totalDestroyed === mapLength) {
+            const gameDoneEvent = new Event('victory');
+            document.dispatchEvent(gameDoneEvent);
+        }
     }
     // destroy all passed blocks
     destroyPastBlocks() {
@@ -233,14 +238,14 @@ export class BreakableBlockGenerator extends BlockGenerator {
              || (direction == 3 && x < curXPos - width / 2 + this.#errorMargin) //need cursor to be to the left
              || (this.blockArray[i].breakable && this.blockArray[i].inRange && Math.abs(curXPos - getX(cursorX, planeWidth)) <= width / 2 + this.#errorMargin && Math.abs(curYPos - getY(cursorY, planeHeight)) <= height / 2 + this.#errorMargin) //previously breakable and in box
             ) {
-                if(!this.blockArray[i].breakable) {
-                    console.log("just became breakable");
-                }
+                // if(!this.blockArray[i].breakable) {
+                //     console.log("just became breakable");
+                // }
                 this.blockArray[i].breakable = true;
             } else {
-                if(this.blockArray[i].breakable) {
-                    console.log("not breakable anymore");
-                }
+                // if(this.blockArray[i].breakable) {
+                //     console.log("not breakable anymore");
+                // }
                 this.blockArray[i].breakable = false;
             }
         }
@@ -254,7 +259,7 @@ export class BreakableBlockGenerator extends BlockGenerator {
             let curZPos = this.blockArray[i].zCoord;
             // it is in range
             if (curZPos >= this.#beginInRange && curZPos <= this.#endInRange) {
-                console.log("in range");
+                // console.log("in range");
                 if (!this.blockArray[i].inRange) {
                     // make the block green
                     this.blockArray[i].mesh.material = new THREE.MeshStandardMaterial({color: 0x00ff00});
@@ -282,6 +287,23 @@ export class BreakableBlockGenerator extends BlockGenerator {
                     this.destroyBlock(i);
                 }
             } else {
+               // console.log(this.blockArray[i].mesh.material.color.g);
+                if(this.blockArray[i].mesh.material.color.g) {
+                    const lifeElement = document.getElementById('lives_count');
+                    const curLives = lifeElement.textContent.slice(-1);
+                    const intValue = curLives.charCodeAt(0) - '0'.charCodeAt(0)
+                    lifeElement.textContent = `Lives: ${intValue - 1}`;
+                    if(intValue === 1) {
+                        setInterval(() => {
+                            this.blockArray[i].length = 0;
+                            const gameDoneEvent = new Event('gameDone');
+                            document.dispatchEvent(gameDoneEvent);
+                            while (this.sceneObject.scene.children.length > 0) {
+                                this.sceneObject.scene.remove(this.sceneObject.scene.children[0]);
+                            }
+                        }, 1000);
+                    }
+                }
                 this.blockArray[i].mesh.material = new THREE.MeshStandardMaterial({color: 0xff0000});
                 this.blockArray[i].inRange = false;
                 this.blockArray[i].showTargetSquare(false);

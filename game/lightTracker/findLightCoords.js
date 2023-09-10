@@ -141,7 +141,7 @@ function processCoords() {
             // reflect across center of video capture
             cursorX = window.innerWidth - coord.x * (window.innerWidth / video.width);
             cursorY = coord.y * (window.innerHeight / video.height);
-            console.log(`${xPoint}, ${yPoint}`);
+            // console.log(`${xPoint}, ${yPoint}`);
 
             coords.push(coord);
             curLen++;

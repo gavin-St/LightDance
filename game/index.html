@@ -45,9 +45,12 @@
 			};
 			let cursorX = 0, cursorY = 0;
 			let planeHeight, planeWidth;
+			let totalDestroyed = 0;
+			let mapLength = (sessionStorage.getItem("Active Map") ? JSON.parse(sessionStorage.getItem(sessionStorage.getItem("Active Map"))) : []).length;
 		</script>
 		<script src="handleGameLoop.js" type="module"></script>
 		<script src="components/game_over.js" type = "module"></script>
+		<script src="components/block.js" type="module"></script>
 	</div>
 </body>
 </html>
