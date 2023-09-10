@@ -17,7 +17,7 @@ document.getElementById(`choose-map`).addEventListener("change", (e) => {
         sessionStorage.setItem("Active Map", "");
         // window.location.href = "/";
     } else {
-        fetch(`../test_maps/${mapName}`)
+        fetch(`../assets/maps/${mapName}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Network response was not ok: ${response.status}`);
