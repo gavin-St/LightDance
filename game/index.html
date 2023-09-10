@@ -11,7 +11,9 @@
 </head>
 <body>
 	<div class="debug_tools">
-		<a id="test_button" href="../">Back</a>
+		<div>
+			<a id="back_button" href="../">⮜Back</a>
+		</div>
 		<button id="move_block" type="button" class="button0">Randomly Add a Block</button>
 		<p id="cursor_coordinates" class="text0"></p>
 		<p id="clock" class="text0"></p>
@@ -20,9 +22,12 @@
 		<p id="level_title" class="h1"></p>
 	</div>
 	<div class="hints">
-		<p id="explanation" class="text0">Use your phone flashlight or any other source of bright light to move your cursor! Try to stay away from bright spots in the background!</p>
+		<p id="explanation" class="text0">Use your phone flashlight or any other source of bright light to move your cursor. Try to stay away from bright spots in the background!</p>
 		<p id="warning" class="text0">Make sure our green circle correctly traces your movements before playing!</p>
 		<p id="skip" class="text0">Press c to continue</p>
+	</div>
+	<div class="lives">
+		<p id="lives_count" class="text0">Lives: 3</p>
 	</div>
 	<div class="video">
 		<video id="cam_input" style="display: none; -webkit-transform: scaleX(-1); transform: scaleX(-1);" height="480" width="640" style="display:block; margin-bottom: 20px;"></video>

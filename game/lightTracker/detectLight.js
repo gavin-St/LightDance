@@ -64,6 +64,12 @@ const getBrightestPoint = (img) => {
     }
     // Check if no valid contour was found
     if (!validContourFound) {
+        grayscaled.delete();
+        blurred.delete();
+        brightest_only.delete();
+        hierarchy.delete();
+        contours.delete();
+        most_circ_contour.delete();
         return null;
     }
 
@@ -79,6 +85,12 @@ const getBrightestPoint = (img) => {
         centerY = Math.floor(img_moment["m01"]/img_moment["m00"]);
     } else {
         console.log("ERROR");
+        grayscaled.delete();
+        blurred.delete();
+        brightest_only.delete();
+        hierarchy.delete();
+        contours.delete();
+        most_circ_contour.delete();
         return null;
     }
 

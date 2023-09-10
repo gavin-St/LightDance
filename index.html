@@ -10,26 +10,24 @@
     <canvas id="app"></canvas>
     <div id = "title">Light Dance</div>
 
-    <div id = "main buttons">
-      <div id="button1" class="button">
-        <form>
-          <button class="play_button" type="submit" formaction="game">Play</button>
-        </form>
+    <div id = "main_buttons">
+      <div>
+      <form>
+        <button class="play_button" type="submit" formaction="game">Play</button>
+      </form>
       </div>
-      <!-- <div id="button2" class="button">
-        <a href="custom">Select Levels</a>
-      </div> -->
+      <div id="select-level">
+        <label id="level-label">Level: </label>
+        <select id="choose-map">
+          <option class="option" value="random">Level One</option>
+          <option class="option" value="testing_copy.json">Level Two</option>
+          <option class="option" value="testing_copy.json">Level Three</option>
+        </select>
+      </div>
     </div>
-    <!-- <div id="level"></div> -->
-    <div id="select-level">
-      <label id="level-label">Level: </label>
-      <select id="choose-map">
-        <option id="option" value="random">Random</option>
-        <option id="option" value="testing_copy.json">Level 1</option>
-      </select>
-    </div>
-    <h3 id="add-title">Add Custom Map</h3>
+
     <div id="add-map">
+      <h3 id="add-title">Add Custom Map</h3>
       <div id="file-name">
         <label>Name of Map:</label>
         <input type="text" id="map_name">
@@ -38,11 +36,12 @@
         <input type="file" id="map_file">
         <button id="submit_map">Submit</button>
       </div>
-      <div class="scripts">
+      <p id="error-message"></p>
     </div>
-    <p id="error-message"></p>
+    
     <div id="background_animation">
     </div>
+
     <div class="scripts">
       <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
       <script>

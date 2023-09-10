@@ -1,6 +1,10 @@
 @font-face {
-    font-family: 'Azonix';  /* a name to use later in CSS */
+    font-family: 'Azonix';
     src: url('assets/fonts/Azonix.otf') format('opentype')
+}
+@font-face {
+    font-family: 'Moon';
+    src: url('assets/fonts/Moon.otf') format('opentype')
 }
 /* html, body {
     margin: 0;
@@ -13,7 +17,7 @@
 } */
 #title {
 	position: absolute;
-	top: 100px;
+	top: 30%;
 	width: 100%;
 	text-align: center;
 	z-index: 100;
@@ -27,59 +31,43 @@ body {
 	font-family: "Azonix", sans-serif;
 }
 
-/* .play_button {
-    color: black;
-    display: block;
-	font-family: "OCR A Std", monospace;
-	font-size: 40px;
-} */
-
-.play_button {
-	background: blue;
-	color: white;
-	font-size: 40px;
+#main_buttons {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
-	transition: background 0.5s ease-in-out;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	text-align: center; 
+	justify-content: center;
+
+}
+
+.play_button {
+	position: relative;
+	text-align: center; 
+	justify-content: center;
+	background: rgb(8, 23, 194);
+	color: white;
+	font-size: 40px;
+	/* transition: background 0.5s ease-in-out; */
 	font-family: "Azonix", sans-serif;
+	padding: 8px 20px 8px 20px;
+	border-radius: 0px;
 }
   
 .play_button:hover {
 	/*background: linear-gradient(to left top, #358b38, #7be280); */
-	background: rgb(52, 181, 52);
+	background: rgb(45, 230, 202);
 	cursor: pointer;
 }
 
-#button1 {
-	position: absolute;
-	top: 260px;
-	width: 100%;
-	text-align: center;
-	z-index: 100;
-}
-#button2 {
-	position: absolute;
-	top: 300px;
-	width: 100%;
-	text-align: center;
-	z-index: 100;
-}
-#button3 {
-	position: absolute;
-	top: 340px;
-	width: 100%;
-	text-align: center;
-	z-index: 100;
-}
-
 #select-level {
+	position: relative;
 	text-align: center; 
 	display: flex;
-	align-items: center; 
 	justify-content: center; 
-	margin-top: 200px; 
+	margin-top: 10px; 
 	color: white;
 	font-size: 40px;
 }
@@ -90,11 +78,17 @@ body {
 
 #choose-map {
 	padding: 5px; 
-	width: 8%;
+	font-size: 20px;
+	width: 170px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+	font-family: "Azonix", sans-serif;
 }
 
-#option {
-	color: white;
+.option {
+	font-family: "Azonix", sans-serif;
+	width: 170px;
+	color: black;
 }
 
 /* body {
@@ -104,28 +98,22 @@ body {
 	background-attachment: fixed;
 } */
 
-#add-map, #add-title {
+#add-map {
+	position: absolute;   /* corrected this */
+	left: 50%;
+	top: 80%;
+	transform: translateX(-50%); /* for horizontal centering */
 	text-align: center; 
 	display: flex;
-	align-items: center; 
 	justify-content: center; 
 	color: white;
-	font-size: 40px;
-	display: flex;
-	align-items: center;
+	font-size: 30px;
 	flex-direction: column;
-	margin-top: 150px;
-}
-
-#add-map {
-	font-size: 25px;
-	margin-top: 20px;
 }
 
 input[type="text"],
 input[type="file"],
 button {
-    /* width: 10%; */
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
@@ -134,7 +122,7 @@ button {
 }
 
 #map_name {
-	color: black;
+	color: white;
 }
 
 #submit_map {
