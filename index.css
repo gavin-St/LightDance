@@ -17,30 +17,31 @@
 } */
 #title {
 	position: absolute;
-	top: 30%;
+	top: 16%;
 	width: 100%;
 	text-align: center;
 	z-index: 100;
 	display: block;
     color: white;
 	font-family: "Azonix", sans-serif;
-	font-size: 100px;
+	font-size: 120px;
 }
 
 body {
 	font-family: "Azonix", sans-serif;
+	margin: 0;
+    padding: 0;
 }
 
 #main_buttons {
 	position: absolute;
-	top: 50%;
+	top: 48%;
 	left: 50%;
 	transform: translateX(-50%);
 	display: flex;
 	flex-direction: column;
 	text-align: center; 
 	justify-content: center;
-
 }
 
 .play_button {
@@ -53,12 +54,13 @@ body {
 	/* transition: background 0.5s ease-in-out; */
 	font-family: "Azonix", sans-serif;
 	padding: 8px 20px 8px 20px;
-	border-radius: 0px;
+	border-radius: 4px;
+	border-width: 3px;
 }
   
 .play_button:hover {
 	/*background: linear-gradient(to left top, #358b38, #7be280); */
-	background: rgb(45, 230, 202);
+	background: rgb(61, 92, 194);
 	cursor: pointer;
 }
 
@@ -79,14 +81,14 @@ body {
 #choose-map {
 	padding: 5px; 
 	font-size: 20px;
-	width: 170px;
+	width: 150px;
 	overflow: hidden;
     text-overflow: ellipsis;
-	font-family: "Azonix", sans-serif;
+	font-family: "Moon", sans-serif;
 }
 
 .option {
-	font-family: "Azonix", sans-serif;
+	font-family: "Moon", sans-serif;
 	width: 170px;
 	color: black;
 }
@@ -107,7 +109,7 @@ body {
 	display: flex;
 	justify-content: center; 
 	color: white;
-	font-size: 30px;
+	font-size: 20px;
 	flex-direction: column;
 }
 
@@ -133,5 +135,4 @@ button {
 	position: fixed;
 	z-index: -1;
 	top: 0%;
-
 }

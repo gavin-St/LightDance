@@ -35,6 +35,17 @@ document.addEventListener('keydown', function(event) {
     if (event.key === 'q' || event.key === 'Q') { 
         keepRunning = false;
     }
+    if (event.key === 'c' || event.key === 'C') {
+        var element = document.getElementById('canvas_output');
+        if (element) {
+            // Toggle the display
+            if (element.style.display === 'none' || element.style.display === '') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+    }
 });
 
 // main function to map coords

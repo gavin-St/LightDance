@@ -39,7 +39,7 @@ function showLevelTitle(title) {
         titleElement.innerHTML = "";
         const event = new Event('titleDone');
         document.dispatchEvent(event);
-    }, 3000);
+    }, 2000);
 }
 
 // determines if loop keeps running
@@ -51,6 +51,8 @@ document.addEventListener('keydown', function(event) {
 });
 
 function createVideo() {
+    document.getElementById("skip").style.display = "block";
+    
     let video = document.getElementById("cam_input");
     console.log(video);
     video.width = window.innerWidth / 2;
@@ -179,8 +181,20 @@ function createVideo() {
                 hint1.innerHTML = "";
                 const hint2 = document.getElementById("warning");
                 hint2.innerHTML = "";
-                const hint3 = document.getElementById("skip");
-                hint3.innerHTML = "Press c to toggle mini-cam";
+                const c = document.getElementById("skip");
+                c.innerHTML = "Press c to toggle mini-cam";
+                c.style.position = 'fixed';
+                c.style.top = '1px';
+                c.style.left = '50%';
+                c.style.transform = "translateX(-50%)";  
+                setTimeout(() => {
+                    c.style.display = "none"
+                }, 6000);
+
+                const cam = document.getElementById("canvas_output");
+                cam.style.position = 'fixed';
+                cam.style.top = '0';
+                cam.style.right = '0';
 
                 const event = new Event('introDone');
                 document.dispatchEvent(event);

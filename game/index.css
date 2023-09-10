@@ -64,4 +64,30 @@ body {
     font-size: 100px;
     margin: 0;
     padding: 0;
+    text-align: center;
+}
+
+.lives {
+    position: fixed;
+    bottom: 0px;
+    left: 50%;     
+    transform: translateX(-50%);
+}
+#lives_count {
+    font-size: 18px;
+    display: block;
+    font-family: "Moon", sans-serif;
+}
+
+#videos {
+    position: absolute;
+    display: flex;           /* Make this a flex container */
+    flex-direction: column;  /* Stack the children vertically */
+    align-items: center;     /* Center children vertically */
+    justify-content: center; /* Center children horizontally */
+    top: 0;                  /* Span the div to cover the full height of its parent/container */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-top: 30px;        /* If you still want the margin on top */
 }
