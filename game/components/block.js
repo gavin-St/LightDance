@@ -53,8 +53,8 @@ export class Block {
         let centerX = this.xCoord;
         let centerY = this.yCoord;
 
-        const topLeft = this.rotatePoint(centerX - this.width / 2, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z);
-        const topRight = this.rotatePoint(centerX + this.width / 2, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z);
+        const topLeft = this.rotatePoint(centerX - this.width / 2 + this.width / 10, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z);
+        const topRight = this.rotatePoint(centerX + this.width / 2 - this.width / 10, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z);
 
         const triangleGeometry = new THREE.Geometry();
         var v1 = new THREE.Vector3(topLeft[0], topLeft[1], this.mesh.position.z + 1.01);
