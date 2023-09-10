@@ -1,4 +1,4 @@
-let mapIndex = 0;
+let mapIndex = 0 ;
 
 
 function validJSON(json) {
