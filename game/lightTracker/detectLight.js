@@ -20,7 +20,7 @@ const getBrightestPoint = (img) => {
 
     if (brightest_value < intensityThreshold) {
         console.log("Light intensity below threshold");
-        return null;  // or however you want to handle this
+        return null; 
     }
 
     // any pixel >= 200 is set to white (255) and any < 200 are set to black
@@ -47,7 +47,7 @@ const getBrightestPoint = (img) => {
     for(let i = 0; i < contours.size(); i++) {
         const contour = contours.get(i);
         const area = cv.contourArea(contour);
-        console.log("area",area)
+        // console.log("area",area)
         // Check area size
         // if (area > sizeThreshold) {
         //     console.log("AREA TOO BIG")

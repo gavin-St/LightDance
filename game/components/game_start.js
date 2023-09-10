@@ -52,7 +52,8 @@ document.addEventListener('keydown', function(event) {
 
 function createVideo() {
     document.getElementById("skip").style.display = "block";
-    
+    document.getElementById("skip").classList.add('flashing-text');
+
     let video = document.getElementById("cam_input");
     console.log(video);
     video.width = window.innerWidth / 2;

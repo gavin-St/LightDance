@@ -91,3 +91,16 @@ body {
     right: 0;
     margin-top: 30px;        /* If you still want the margin on top */
 }
+
+@keyframes flashAnimation {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+.flashing-text {
+    animation: flashAnimation 2s infinite; /* 2 seconds to complete one cycle of fading out and back in */
+}

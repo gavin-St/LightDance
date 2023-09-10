@@ -85,7 +85,7 @@ function processCoords() {
         // Remove the event listener after it's been executed.
         video.removeEventListener('playing', onVideoPlaying);
 
-        // schedule first frame processing.
+        // Schedule first frame processing.
         setTimeout(processFrame, 10);
     }
 
@@ -168,6 +168,7 @@ function processCoords() {
             // Display the resulting frame
             cv.imshow('canvas_output', frame);
             frame.delete();
+
             // Check next frame
             if (keepRunning) {
                 let delay = 1000/FPS - (Date.now() - begin);
