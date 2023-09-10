@@ -54,6 +54,8 @@ function createVideo() {
     document.getElementById("skip").style.display = "block";
     document.getElementById("skip").classList.add('flashing-text');
 
+    document.getElementById("mini_title").innerHTML = "Level 1";
+
     let video = document.getElementById("cam_input");
     console.log(video);
     video.width = window.innerWidth / 2;
@@ -185,12 +187,12 @@ function createVideo() {
                 const c = document.getElementById("skip");
                 c.innerHTML = "Press c to toggle mini-cam";
                 c.style.position = 'fixed';
-                c.style.top = '1px';
+                c.style.top = '30px';
                 c.style.left = '50%';
                 c.style.transform = "translateX(-50%)";  
                 setTimeout(() => {
                     c.style.display = "none"
-                }, 6000);
+                }, 4500);
 
                 const cam = document.getElementById("canvas_output");
                 cam.style.position = 'fixed';
