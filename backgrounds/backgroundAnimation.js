@@ -22,10 +22,12 @@ function randomlyGenerateBlock() {
 
 function animate() {
     requestAnimationFrame(animate);
-    backgroundGenerator.moveAllCubes(0.05);
+    // backgroundGenerator.moveAllCubes(0.05);
     backgroundGenerator.destroyPastBlocks();
     renderer.render(backgroundScene.scene, camera);
 }
+
+setInterval(() => {backgroundGenerator.moveAllCubes(0.05)}, 10);
 
 animate();
 setInterval(randomlyGenerateBlock, generationFrequency);
