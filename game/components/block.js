@@ -47,35 +47,36 @@ export class Block {
         squareMesh.visible = false;
         this.targetSquare = squareMesh;
         //console.log(this.sceneObject);
-        this.sceneObject.scene.add(this.targetSquare);
+        // this.sceneObject.scene.add(this.targetSquare);
     }
     #directionIndicator() {
-        // Create a yellow material
-        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-
-        // Create a circle geometry
-        const geometry = new THREE.CircleGeometry(0.25, 32); // Radius of 0.5 and 32 segments
-
-        // Create a mesh (circle) with the material and geometry
-        const indicator = new THREE.Mesh(geometry, material);
-
-        // Set the circle's position based on the center coordinates
         let centerX = this.xCoord;
         let centerY = this.yCoord;
-        if(this.direction == 0) {
-            centerY += 1;
-        } else if(this.direction == 1) {
-            centerX += 1;
-        } else if(this.direction == 2) {
-            centerY -= 1;
-        } else {
-            centerX -= 1;
-        }
-        const [newX, newY] = this.rotatePoint(centerX, centerY, this.xCoord, this.yCoord, this.mesh.rotation.z);
-        indicator.position.set(newX, newY, -9);
 
-        this.sceneObject.scene.add(indicator);
-        this.indicator = indicator;
+        const topLeft = this.rotatePoint(centerX - this.width / 2, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z + 0.01);
+        const topRight = this.rotatePoint(centerX + this.width / 2, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z + 0.01);
+
+        const triangleGeometry = new THREE.Geometry();
+        var v1 = new THREE.Vector3(topLeft[0], topLeft[1], this.mesh.position.z + 1.01);
+        var v2 = new THREE.Vector3(topRight[0], topRight[1], this.mesh.position.z + 1.01);
+        var v3 = new THREE.Vector3(centerX, centerY, this.mesh.position.z + 1.01);
+        triangleGeometry.vertices.push( v1 );
+        triangleGeometry.vertices.push( v2 );
+        triangleGeometry.vertices.push( v3 );
+
+        triangleGeometry.faces.push(new THREE.Face3(0, 1, 2));
+        triangleGeometry.computeFaceNormals();
+
+        const triangleMaterial = new THREE.MeshBasicMaterial({
+        color: 0xffff00,
+        side: THREE.DoubleSide
+        });
+
+        const triangle = new THREE.Mesh(triangleGeometry, triangleMaterial);
+
+
+        this.sceneObject.scene.add(triangle);
+        this.indicator = triangle;
     }
     showTargetSquare(show = true) {
         this.targetSquare.visible = show;
@@ -145,7 +146,7 @@ export class BlockGenerator {
     // generates a block
     // rotation is in radians
     generateBlock(x = 0, y = 0, rotation = 0, direction = 0) {
-        if([0, 1, 2, 3].indexOf(direction) == -1) direction = 0;
+        direction = 0;
         // rotation = 0;
         this.blockArray.push();
         if (x < this.blockGenerationBorders.beginX) {
@@ -257,6 +258,10 @@ export class BreakableBlockGenerator extends BlockGenerator {
                 if (!this.blockArray[i].inRange) {
                     // make the block green
                     this.blockArray[i].mesh.material = new THREE.MeshStandardMaterial({color: 0x00ff00});
+                    // this.blockArray[i].indicator.material = new THREE.MeshStandardMaterial({
+                    //     color: 0x00ff00,
+                    //     side: THREE.DoubleSide
+                    //     });
                     this.blockArray[i].showTargetSquare(true);
                 }
                 this.blockArray[i].inRange = true;

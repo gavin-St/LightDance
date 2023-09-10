@@ -25,12 +25,14 @@ planeWidth = (generator.blockGenerationBorders.endX - generator.blockGenerationB
 
 function animate() {
     requestAnimationFrame(animate);
-    generator.moveAllCubes(0.05);
+    // generator.moveAllCubes(0.05);
     generator.destroyPastBlocks();
     generator.checkInRange();
     generator.checkBreakability();
     renderer.render(mainScene.scene, camera);
 }
+
+setInterval(() => {generator.moveAllCubes(0.05)}, 10);
 
 makeBlockButton.addEventListener('click', randomlyGenerateBlock);
 animate();
