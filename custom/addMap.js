@@ -10,6 +10,14 @@ function validJSON(json) {
     return true;
 }
 
+let baseURL;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    baseURL = '/';
+} else {
+    baseURL = '/LightDance/';
+}
+
+
 sessionStorage.setItem("Active Map", "");
 document.getElementById(`choose-map`).addEventListener("change", (e) => {
     let mapName = document.getElementById(`choose-map`).value;
@@ -17,7 +25,7 @@ document.getElementById(`choose-map`).addEventListener("change", (e) => {
         sessionStorage.setItem("Active Map", "");
         // window.location.href = "/";
     } else {
-        fetch(`../assets/maps/${mapName}`)
+        fetch(baseURL + `assets/maps/${mapName}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Network response was not ok: ${response.status}`);
