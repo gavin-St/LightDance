@@ -16,6 +16,8 @@ generator = new BreakableBlockGenerator(
     0.05 // errorMargin
 );
 
+document.dispatchEvent(new Event("generatorInitialized"));
+
 console.log("INITIALIZED")
 console.log(generator);
 
@@ -31,13 +33,12 @@ planeWidth = (generator.blockGenerationBorders.endX - generator.blockGenerationB
 
 function animate() {
     const lifeElement = document.getElementById('lives_count');
-    const curLives = lifeElement.textContent.slice(-1);
-    const intValue = curLives.charCodeAt(0) - '0'.charCodeAt(0);
+    const curLives = parseInt(lifeElement.textContent.split(' ')[1]);
 
-    if(intValue > 0) {
+    if (curLives > 0) {
         requestAnimationFrame(animate);
         // generator.moveAllCubes(0.05);
-        generator.destroyPastBlocks();
+        generator.destroyPastBlocksAndTrack();
         generator.checkInRange();
         generator.checkBreakability();
         renderer.render(mainScene.scene, camera);

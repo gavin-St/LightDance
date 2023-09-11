@@ -37,6 +37,7 @@
 	<div class="scripts">
 		
 		<script src="utils/initializeCV.js"></script>
+		<script src="handleGameLoop.js" type="module"></script>
 		<script src="components/game_start.js" type="module"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
 		<script>
@@ -49,7 +50,6 @@
 			let totalDestroyed = 0;
 			let mapLength = (sessionStorage.getItem("Active Map") ? JSON.parse(sessionStorage.getItem(sessionStorage.getItem("Active Map"))) : []).length;
 		</script>
-		<script src="handleGameLoop.js" type="module"></script>
 		<script src="components/game_over.js" type = "module"></script>
 		<script src="components/block.js" type="module"></script>
 	</div>

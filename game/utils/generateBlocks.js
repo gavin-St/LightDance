@@ -9,7 +9,7 @@ const degToRad = Math.PI / 180;
 // time it takes for block to go from spawn to center of targetable
 console.log(generator);
 const blockGenerationDelay = (generator.inRangeCenterZCoord - generator.blockGenerationZCoord) / generator.movementPerSecond;
-
+// ^^
 // can delete this once read
 // issue: time in the map causes blocks to be GENERATED at that time, not in range at that time.
 // solution: let blocks stay the same, but delay the song by blockGenerationDelay. 
@@ -43,10 +43,11 @@ function frame() {
     curTime = clock.getElapsedTime();
     timeDisplay.innerHTML = `Seconds Passed: ${curTime}`;
     const lifeElement = document.getElementById('lives_count');
-    const curLives = lifeElement.textContent.slice(-1);
-    const intValue = curLives.charCodeAt(0) - '0'.charCodeAt(0);
-    while (curBlock && curTime >= curBlock.time && intValue > 0) {
+    const curLives = parseInt(lifeElement.textContent.split(' ')[1]);
+    console.log(curLives);
+    while (curBlock && curTime >= curBlock.time && curLives > 0) {
         generator.generateBlock(curBlock.x, curBlock.y, curBlock.rotation * Math.PI / 180);
+        console.log("FUCKING GENERATED A BLOCK");
         map.pop();
         if (map.length === 0) {
             console.log("EMPTY");

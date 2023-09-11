@@ -94,7 +94,7 @@ export class BlockGenerator {
     #blockMaterial;
     #blockDimensions; // array, [width, height, depth]
     #blockGenerationZCoord; // radius at which to generate blocks (only used for random generation)
-    #despawnLimit; // the z coord at which blocks will despawn (to save memory)
+    _despawnLimit; // the z coord at which blocks will despawn (to save memory)
     sceneObject;
     movementPerSecond;
     constructor(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit, movementPerSecond) {
@@ -104,7 +104,7 @@ export class BlockGenerator {
         this.blockGenerationBorders = blockGenerationBorders;
         this.#blockDimensions = blockDimensions
         this.#blockGenerationZCoord = blockGenerationZCoord;
-        this.#despawnLimit = despawnLimit;
+        this._despawnLimit = despawnLimit;
         this.movementPerSecond = movementPerSecond;
         this.#initializeBlockData();
     }
@@ -189,16 +189,11 @@ export class BlockGenerator {
         this.sceneObject.scene.remove(this.blockArray[index].mesh);
         this.blockArray.splice(index, 1);
         this.numCubes--;
-        totalDestroyed++;
-        if(totalDestroyed === mapLength) {
-            const gameDoneEvent = new Event('victory');
-            document.dispatchEvent(gameDoneEvent);
-        }
     }
     // destroy all passed blocks
     destroyPastBlocks() {
         for (let i = 0; i < this.numCubes; i++) {
-            if (this.blockArray[i].zCoord > this.#despawnLimit) {
+            if (this.blockArray[i].zCoord > this._despawnLimit) {
                 this.destroyBlock(i);
             }
         }
@@ -218,6 +213,22 @@ export class BreakableBlockGenerator extends BlockGenerator {
         this.#beginInRange = inRangeCenterZCoord - inRangeRadius;
         this.#endInRange = inRangeCenterZCoord + inRangeRadius;
         this.#errorMargin = errorMargin;
+    }
+    destroyBlockAndTrack(index) {
+        this.destroyBlock(index)
+        totalDestroyed++;
+        if(totalDestroyed === mapLength) {
+            const gameDoneEvent = new Event('victory');
+            document.dispatchEvent(gameDoneEvent);
+        }
+    }
+     // destroy all passed blocks
+    destroyPastBlocksAndTrack() {
+        for (let i = 0; i < this.numCubes; i++) {
+            if (this.blockArray[i].zCoord > this._despawnLimit) {
+                this.destroyBlockAndTrack(i);
+            }
+        }
     }
     // check for when blocks become breakable (cursor in correct position to break block)
     checkBreakability() {
@@ -285,16 +296,15 @@ export class BreakableBlockGenerator extends BlockGenerator {
                                                   || (direction == 1 && x < curXPos)
                                                   || (direction == 2 && y > curYPos)
                                                   || (direction == 3 && x > curXPos))) {
-                    this.destroyBlock(i);
+                    this.destroyBlockAndTrack(i);
                 }
             } else {
                // console.log(this.blockArray[i].mesh.material.color.g);
                 if(this.blockArray[i].mesh.material.color.g) {
                     const lifeElement = document.getElementById('lives_count');
-                    const curLives = lifeElement.textContent.slice(-1);
-                    const intValue = curLives.charCodeAt(0) - '0'.charCodeAt(0)
-                    lifeElement.textContent = `Lives: ${intValue - 1}`;
-                    if(intValue === 1) {
+                    const curLives = parseInt(lifeElement.textContent.split(' ')[1]);
+                    lifeElement.textContent = `Lives: ${curLives - 1}`;
+                    if(curLives === 1) {
                         setInterval(() => {
                             this.blockArray[i].length = 0;
                             const gameDoneEvent = new Event('gameDone');
