@@ -9,6 +9,12 @@ function validJSON(json) {
     return true;
 }
 
+let activeMap = sessionStorage.getItem("Active Map");
+if (activeMap) {
+    let selectElement = document.getElementById("choose-map");
+    selectElement.value = activeMap;
+}
+
 let baseURL;
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     baseURL = '/';

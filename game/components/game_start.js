@@ -68,10 +68,7 @@ document.addEventListener('keydown', function(event) {
 function createVideo() {
     document.getElementById("skip").style.display = "block";
     document.getElementById("skip").classList.add('flashing-text');
-
     document.getElementById("mini_title").innerHTML = displayLevelTitle;
-    let music = new Audio(`../assets/songs/${levelTitle}.mp3`);
-    music.play();
 
     let video = document.getElementById("cam_input");
     console.log(video);
@@ -209,7 +206,7 @@ function createVideo() {
                 c.style.transform = "translateX(-50%)";  
                 setTimeout(() => {
                     c.style.display = "none"
-                }, 4500);
+                }, 8500);
 
                 const cam = document.getElementById("canvas_output");
                 cam.style.position = 'fixed';
