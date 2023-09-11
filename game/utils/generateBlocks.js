@@ -6,6 +6,15 @@ let clock = new THREE.Clock(true);
 let map = sessionStorage.getItem("Active Map") ? JSON.parse(sessionStorage.getItem(sessionStorage.getItem("Active Map"))) : [];
 const degToRad = Math.PI / 180;
 
+// time it takes for block to go from spawn to center of targetable
+console.log(generator);
+const blockGenerationDelay = (generator.inRangeCenterZCoord - generator.blockGenerationZCoord) / generator.movementPerSecond;
+
+// can delete this once read
+// issue: time in the map causes blocks to be GENERATED at that time, not in range at that time.
+// solution: let blocks stay the same, but delay the song by blockGenerationDelay. 
+// thus, time in the JSON file (and thus the intended moment to break block) is accurate to the actual song's rhythm.
+
 function sortMap() {
     // sort block spawn input by reverse in terms of time
     map.sort((a, b) => {

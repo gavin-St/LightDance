@@ -1,8 +1,8 @@
 document.addEventListener('introDone', function() {
     const scripts = [
         "utils/initializeScene.js",
-        "components/light.js",
         "components/initializeGenerator.js",
+        "components/light.js",
         "components/tracker.js",
         "utils/generateBlocks.js",
         "lightTracker/findLightCoords.js"

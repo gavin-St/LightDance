@@ -19,5 +19,5 @@ function onWindowResize() {
 }
 
 window.addEventListener('resize', onWindowResize, false);
-
+console.log("got here");
 init();

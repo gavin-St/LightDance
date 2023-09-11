@@ -2,7 +2,7 @@ import { BlockGenerator } from "../game/components/block.js";
 
 const generationFrequency = 2000;
 
-// constructor(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit) {
+// constructor(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit, movementPerSecond)
 
 let backgroundGenerator = new BlockGenerator(
     backgroundScene, // sceneObject
@@ -10,6 +10,7 @@ let backgroundGenerator = new BlockGenerator(
     [2, 2, 2], // blockDimensions
     -10, // blockGenerationZCoord
     10, // despawnLimit
+    5 // movementPerSecond
 )
 
 // randomly generates a block on a circle with radius blockGenerationRadius
@@ -27,7 +28,8 @@ function animate() {
     renderer.render(backgroundScene.scene, camera);
 }
 
-setInterval(() => {backgroundGenerator.moveAllCubes(0.05)}, 10);
+
+setInterval(() => {backgroundGenerator.moveAllCubes(backgroundGenerator.movementPerSecond / 100)}, 10);
 
 animate();
 setInterval(randomlyGenerateBlock, generationFrequency);

@@ -96,7 +96,8 @@ export class BlockGenerator {
     #blockGenerationZCoord; // radius at which to generate blocks (only used for random generation)
     #despawnLimit; // the z coord at which blocks will despawn (to save memory)
     sceneObject;
-    constructor(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit) {
+    movementPerSecond;
+    constructor(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit, movementPerSecond) {
         this.sceneObject = sceneObject;
         this.numCubes = 0;
         this.blockArray = [];
@@ -104,6 +105,7 @@ export class BlockGenerator {
         this.#blockDimensions = blockDimensions
         this.#blockGenerationZCoord = blockGenerationZCoord;
         this.#despawnLimit = despawnLimit;
+        this.movementPerSecond = movementPerSecond;
         this.#initializeBlockData();
     }
 
@@ -204,20 +206,19 @@ export class BlockGenerator {
 }
 
 export class BreakableBlockGenerator extends BlockGenerator {
-    #inRangeCenterZCoord; // center Z coordinate of the in-range region for blocks
+    inRangeCenterZCoord; // center Z coordinate of the in-range region for blocks
     #inRangeRadius; // the radius of the in-range region centered at inRangeCenterZCoord
     #beginInRange; // start of in-range region (z-coord)
     #endInRange; // end of in-range region (z-coord)
     #errorMargin; 
-    constructor(sceneObject, blockGenerationZCoord, despawnLimit, blockGenerationBorders, blockDimensions, inRangeCenterZCoord, inRangeRadius, errorMargin) {
-        super(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit);
-        this.#inRangeCenterZCoord = inRangeCenterZCoord;
+    constructor(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit, movementPerSecond, inRangeCenterZCoord, inRangeRadius, errorMargin) {
+        super(sceneObject, blockGenerationBorders, blockDimensions, blockGenerationZCoord, despawnLimit, movementPerSecond);
+        this.inRangeCenterZCoord = inRangeCenterZCoord;
         this.#inRangeRadius = inRangeRadius;
         this.#beginInRange = inRangeCenterZCoord - inRangeRadius;
         this.#endInRange = inRangeCenterZCoord + inRangeRadius;
         this.#errorMargin = errorMargin;
     }
-
     // check for when blocks become breakable (cursor in correct position to break block)
     checkBreakability() {
         for (let i = 0; i < this.numCubes; i++) {
