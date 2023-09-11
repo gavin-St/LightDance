@@ -34,13 +34,13 @@ let levelTitle = sessionStorage.getItem("Active Map");
 levelTitle = levelTitle.slice(0, -5);
 console.log(levelTitle)
 switch(levelTitle){
-    case "level_one":
+    case "level_1":
         levelTitle = "Level 1";
         break;
-    case "level_two":
+    case "level_2":
         levelTitle = "Level 2";
         break;
-    case "level_three":
+    case "level_3":
         levelTitle = "Level 3";
         break;
     default:
