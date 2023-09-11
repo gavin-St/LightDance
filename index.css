@@ -167,3 +167,21 @@ button {
 	z-index: -1;
 	top: 0%;
 }
+
+#github-link {
+    position: fixed;
+    bottom: 10px;     /* Adjust as needed */
+    left: 10px;   /* Adjust as needed */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+#github-link img {
+    width: 27.2px !important;   /* Adjust as needed */
+    height: 26px !important;  /* Adjust as needed */
+}
+
+#credits {
+	font-family: "Azonix", sans-serif;
+	font-size: 10px;
+	display: none;
+}
