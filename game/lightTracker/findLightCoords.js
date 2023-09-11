@@ -39,7 +39,7 @@ document.addEventListener('keydown', function(event) {
         var element = document.getElementById('canvas_output');
         if (element) {
             // Toggle the display
-            if (element.style.display === 'none' || element.style.display === '') {
+            if (element.style.display === 'none') {
                 element.style.display = 'block';
             } else {
                 element.style.display = 'none';

@@ -15,6 +15,23 @@
     height: 100%;
     display: block;
 } */
+@keyframes glitchEffect {
+	0% {
+	  text-shadow: 2px 2px #888888, -2px -2px #ff0000;
+	}
+	25% {
+	  text-shadow: -2px -2px #888888, 2px 2px #ff0000;
+	}
+	50% {
+	  text-shadow: 2px 2px #888888, -2px -2px #ff0000;
+	}
+	75% {
+	  text-shadow: -2px 2px #888888, 2px -2px #ff0000;
+	}
+	100% {
+	  text-shadow: 2px 2px #888888, -2px -2px #ff0000;
+	}
+  }
 #title {
 	position: absolute;
 	top: 16%;
@@ -25,6 +42,7 @@
     color: white;
 	font-family: "Azonix", sans-serif;
 	font-size: 120px;
+	animation: glitchEffect 10s infinite alternate;
 }
 
 body {
@@ -44,6 +62,18 @@ body {
 	justify-content: center;
 }
 
+@keyframes pulse {
+	0% {
+	  transform: scale(1);
+	}
+	50% {
+	  transform: scale(1.05);
+	}
+	100% {
+	  transform: scale(1);
+	}
+  }
+
 .play_button {
 	position: relative;
 	text-align: center; 
@@ -56,6 +86,7 @@ body {
 	padding: 8px 20px 8px 20px;
 	border-radius: 4px;
 	border-width: 3px;
+	/* animation: pulse 3s infinite alternate; */
 }
   
 .play_button:hover {
@@ -124,7 +155,7 @@ button {
 }
 
 #map_name {
-	color: white;
+	color: black;
 }
 
 #submit_map {
