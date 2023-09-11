@@ -10,178 +10,13 @@ function validJSON(json) {
     return true;
 }
 
-const maps = {
-    'testing_copy.json': [
-        {
-            "time": 5,
-            "x": 4,
-            "y": 0,
-            "rotation": 30
-        },
-        {
-            "time": 8,
-            "x": 0,
-            "y": 4,
-            "rotation": 60
-        },
-        {
-            "time": 10,
-            "x": 2.5,
-            "y": 2.5,
-            "rotation": 120
-        },
-        {
-            "time": 12,
-            "y": 4,
-            "x": 4,
-            "rotation": 0
-        },
-        {
-            "time": 12,
-            "x": -4,
-            "y": 4,
-            "rotation": 0
-        },
-        {
-            "time": 14,
-            "x": 4,
-            "y": 1,
-            "rotation": 30
-        },
-        {
-            "time": 15,
-            "x": -4,
-            "y": 1,
-            "rotation": 60
-        },
-        {
-            "time": 16,
-            "x": -4,
-            "y": -1,
-            "rotation": 30
-        },
-        {
-            "time": 17,
-            "x": 4,
-            "y": -1,
-            "rotation": 60
-        },
-        {
-            "time": 20,
-            "x": 3,
-            "y": 2,
-            "rotation": 45
-        },
-        {
-            "time": 20.2,
-            "x": 4,
-            "y": 0.5,
-            "rotation": 38
-        },
-        {
-            "time": 20.4,
-            "x": 4,
-            "y": -1,
-            "rotation": 30
-        },
-        {
-            "time": 20.6,
-            "x": 2.5,
-            "y": -2.5,
-            "rotation": 15
-        },
-        {
-            "time": 20.8,
-            "x": 1,
-            "y": -4,
-            "rotation": 0
-        },
-        {
-            "time": 22,
-            "x": -4,
-            "y": 0,
-            "rotation": 0
-        },
-        {
-            "time": 22.2,
-            "x": -4,
-            "y": -1,
-            "rotation": 30
-        },
-        {
-            "time": 22.4,
-            "x": -3,
-            "y": -2,
-            "rotation": 45
-        },
-        {
-            "time": 22.6,
-            "x": -2,
-            "y": -3,
-            "rotation": 60
-        },
-        {
-            "time": 22.8,
-            "x": -1,
-            "y": -4,
-            "rotation": 75
-        },
-        {
-            "time": 23,
-            "x": 0,
-            "y": -4,
-            "rotation": 90
-        },
-        {
-            "time": 25,
-            "x": 4,
-            "y": 4,
-            "rotation": 45
-        },
-        {
-            "time": 25.4,
-            "x": -4,
-            "y": -4,
-            "rotation": 45
-        },
-        {
-            "time": 25.8,
-            "x": -4,
-            "y": 4,
-            "rotation": 45
-        },
-        {
-            "time": 26.2,
-            "x": 4,
-            "y": -4,
-            "rotation": 45
-        },
-        {
-            "time": 26.6,
-            "x": 0,
-            "y": 4,
-            "rotation": 0
-        },
-        {
-            "time": 27,
-            "x": 0,
-            "y": -4,
-            "rotation": 0
-        },
-        {
-            "time": 27.4,
-            "x": 4,
-            "y": 0,
-            "rotation": 0
-        },
-        {
-            "time": 27.8,
-            "x": -4,
-            "y": 0,
-            "rotation": 0
-        }
-    ]    
+let baseURL;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    baseURL = '/';
+} else {
+    baseURL = '/LightDance/';
 }
+
 
 sessionStorage.setItem("Active Map", "");
 document.getElementById(`choose-map`).addEventListener("change", (e) => {
@@ -190,13 +25,26 @@ document.getElementById(`choose-map`).addEventListener("change", (e) => {
         sessionStorage.setItem("Active Map", "");
         // window.location.href = "/";
     } else {
-        if(!maps.hasOwnProperty(mapName)) {
+        fetch(baseURL + `assets/maps/${mapName}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(fileContent => {
+            console.log("file successfully read");
+            console.log(fileContent);
+            console.log(validJSON(fileContent));
             sessionStorage.setItem("Active Map", mapName);
-        } else {
-            const fileContent = maps[mapName];
+            sessionStorage.setItem(mapName, fileContent);
+            // window.location.href = "/";
+        })
+        .catch(err => {
+            console.log("file does not exist in json folder");
             sessionStorage.setItem("Active Map", mapName);
-            sessionStorage.setItem(mapName, JSON.stringify(fileContent));
-        }
+            console.log(err);
+        });
     }    
 });
 
