@@ -29,22 +29,20 @@ function remove_front(arr, n) {
     return arr;
 }
 
-let levelTitle = sessionStorage.getItem("Active Map");
 
-levelTitle = levelTitle.slice(0, -5);
-console.log(levelTitle)
+let displayLevelTitle = "";
 switch(levelTitle){
     case "level_1":
-        levelTitle = "Level 1";
+        displayLevelTitle = "Level 1";
         break;
     case "level_2":
-        levelTitle = "Level 2";
+        displayLevelTitle = "Level 2";
         break;
     case "level_3":
-        levelTitle = "Level 3";
+        displayLevelTitle = "Level 3";
         break;
     default:
-        levelTitle = "Level error"
+        displayLevelTitle = "Level error"
 }
 
 // 1. Display the title of a level on screen for 5 seconds.
@@ -71,7 +69,10 @@ function createVideo() {
     document.getElementById("skip").style.display = "block";
     document.getElementById("skip").classList.add('flashing-text');
 
-    document.getElementById("mini_title").innerHTML = levelTitle;
+    document.getElementById("mini_title").innerHTML = displayLevelTitle;
+    c
+    let music = new Audio(`../assets/songs/${levelTitle}.mp3`);
+    music.play();
 
     let video = document.getElementById("cam_input");
     console.log(video);
@@ -226,7 +227,7 @@ function createVideo() {
 }
 
 
-showLevelTitle(levelTitle);
+showLevelTitle(displayLevelTitle);
 document.addEventListener('titleDone', createVideo);
 
 
