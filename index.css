@@ -17,19 +17,19 @@
 } */
 @keyframes glitchEffect {
 	0% {
-	  text-shadow: 2px 2px #888888, -2px -2px #ff0000;
+	  text-shadow: 2px 2px #6edbc5, -2px -2px #ff0000;
 	}
 	25% {
-	  text-shadow: -2px -2px #888888, 2px 2px #ff0000;
+	  text-shadow: -2px -2px #6edbc5, 2px 2px #ff0000;
 	}
 	50% {
-	  text-shadow: 2px 2px #888888, -2px -2px #ff0000;
+	  text-shadow: 2px 2px #6edbc5, -2px -2px #ff0000;
 	}
 	75% {
-	  text-shadow: -2px 2px #888888, 2px -2px #ff0000;
+	  text-shadow: -2px 2px #6edbc5, 2px -2px #ff0000;
 	}
 	100% {
-	  text-shadow: 2px 2px #888888, -2px -2px #ff0000;
+	  text-shadow: 2px 2px #6edbc5, -2px -2px #ff0000;
 	}
   }
 #title {
@@ -42,7 +42,7 @@
     color: white;
 	font-family: "Azonix", sans-serif;
 	font-size: 120px;
-	animation: glitchEffect 10s infinite alternate;
+	animation: glitchEffect 8s infinite alternate;
 }
 
 body {
@@ -166,4 +166,22 @@ button {
 	position: fixed;
 	z-index: -1;
 	top: 0%;
+}
+
+#github-link {
+    position: fixed;
+    bottom: 10px;     /* Adjust as needed */
+    left: 10px;   /* Adjust as needed */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+#github-link img {
+    width: 27.2px !important;   /* Adjust as needed */
+    height: 26px !important;  /* Adjust as needed */
+}
+
+#credits {
+	font-family: "Azonix", sans-serif;
+	font-size: 10px;
+	display: none;
 }

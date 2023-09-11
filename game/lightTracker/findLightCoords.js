@@ -65,6 +65,32 @@ function processCoords() {
     });
     // console.log(cv);
     
+    // Music logic
+    let songUrl;
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        songUrl = `/assets/songs/${levelTitle}.mp3`;
+    } else {
+        songUrl = `/LightDance/assets/songs/${levelTitle}.mp3`;
+    }
+    let context = new (window.AudioContext || window.webkitAudioContext)();
+    let source = context.createBufferSource();
+    // Load audio file
+    fetch(songUrl)
+    .then(response => response.arrayBuffer())
+    .then(data => context.decodeAudioData(data))
+    .then(buffer => {
+        source.buffer = buffer;
+        // Connect source to output and play
+        source.connect(context.destination);
+
+        // Start playback at a specific time (e.g., 2 seconds into the context's lifetime)
+        source.start(context.currentTime + 0.5);
+    })
+    .catch(err => {
+        console.error('Error with decoding audio data', err);
+    });
+
+
     color = new cv.Scalar(0, 255, 0, 255);
 
     function onVideoPlaying() {

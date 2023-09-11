@@ -1,6 +1,5 @@
 let mapIndex = 0;
 
-
 function validJSON(json) {
     try {
         JSON.parse(json); // Array of Objects.
@@ -10,14 +9,31 @@ function validJSON(json) {
     return true;
 }
 
+let activeMap = sessionStorage.getItem("Active Map");
+if (activeMap) {
+    let selectElement = document.getElementById("choose-map");
+    selectElement.value = activeMap;
+}
+
+let baseURL;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    baseURL = '/';
+} else {
+    baseURL = '/LightDance/';
+}
+
+
 sessionStorage.setItem("Active Map", "");
-document.getElementById(`choose-map`).addEventListener("change", (e) => {
+handleMapChange();
+document.getElementById(`choose-map`).addEventListener("change", handleMapChange);
+
+function handleMapChange() {
     let mapName = document.getElementById(`choose-map`).value;
     if(mapName === "random") {
         sessionStorage.setItem("Active Map", "");
         // window.location.href = "/";
     } else {
-        fetch(`../assets/maps/${mapName}`)
+        fetch(baseURL + `assets/maps/${mapName}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`Network response was not ok: ${response.status}`);
@@ -38,7 +54,7 @@ document.getElementById(`choose-map`).addEventListener("change", (e) => {
             console.log(err);
         });
     }    
-});
+}
 
 document.getElementById(`submit_map`).addEventListener("click", () => {
     const errorElement = document.getElementById("error-message");
@@ -55,7 +71,7 @@ document.getElementById(`submit_map`).addEventListener("click", () => {
     let fileread = new FileReader();
     fileread.onload = (e) => {
         let content = e.target.result;
-        console.log(typeof content);
+        // console.log(typeof content);
         if (validJSON(content)) {
             let customMaps = JSON.parse(sessionStorage.getItem("Custom Maps"));
 

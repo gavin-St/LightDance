@@ -30,6 +30,21 @@ function remove_front(arr, n) {
 }
 
 
+let displayLevelTitle = "";
+switch(levelTitle){
+    case "level_1":
+        displayLevelTitle = "Level 1";
+        break;
+    case "level_2":
+        displayLevelTitle = "Level 2";
+        break;
+    case "level_3":
+        displayLevelTitle = "Level 3";
+        break;
+    default:
+        displayLevelTitle = "Level error"
+}
+
 // 1. Display the title of a level on screen for 5 seconds.
 function showLevelTitle(title) {
     const titleElement = document.getElementById("level_title");
@@ -53,8 +68,7 @@ document.addEventListener('keydown', function(event) {
 function createVideo() {
     document.getElementById("skip").style.display = "block";
     document.getElementById("skip").classList.add('flashing-text');
-
-    document.getElementById("mini_title").innerHTML = "Level 1";
+    document.getElementById("mini_title").innerHTML = displayLevelTitle;
 
     let video = document.getElementById("cam_input");
     console.log(video);
@@ -192,7 +206,7 @@ function createVideo() {
                 c.style.transform = "translateX(-50%)";  
                 setTimeout(() => {
                     c.style.display = "none"
-                }, 4500);
+                }, 8500);
 
                 const cam = document.getElementById("canvas_output");
                 cam.style.position = 'fixed';
@@ -208,7 +222,8 @@ function createVideo() {
     document.removeEventListener('titleDone', createVideo);
 }
 
-showLevelTitle('Level 1');
+
+showLevelTitle(displayLevelTitle);
 document.addEventListener('titleDone', createVideo);
 
 

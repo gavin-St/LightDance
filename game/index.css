@@ -21,7 +21,7 @@ body {
 	top: 70px;
 	width: 100%;
 	text-align: center;
-	z-index: 100;
+	z-index: 100000;
 	display: block;
 	font-family: "Moon", sans-serif;
 	font-size: 80px;
