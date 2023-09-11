@@ -17,7 +17,7 @@ let backgroundGenerator = new BlockGenerator(
 function randomlyGenerateBlock() {
     let radius = Math.random() * 2 + 2; // random radius
     let tuple = backgroundGenerator.generatePoint(radius);
-    console.log(tuple);
+    // console.log(tuple);
     backgroundGenerator.generateBlock(tuple[0], tuple[1], tuple[2], tuple[3]);
 }
 
