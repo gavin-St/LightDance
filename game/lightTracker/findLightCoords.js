@@ -84,7 +84,9 @@ function processCoords() {
         source.connect(context.destination);
 
         // Start playback at a specific time (e.g., 2 seconds into the context's lifetime)
-        source.start(context.currentTime + 0.5);
+        console.log("hello there");
+        console.log(blockGenerationDelay);
+        source.start(context.currentTime + blockGenerationDelay);
     })
     .catch(err => {
         console.error('Error with decoding audio data', err);

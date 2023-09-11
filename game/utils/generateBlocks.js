@@ -9,7 +9,11 @@ const degToRad = Math.PI / 180;
 
 // time it takes for block to go from spawn to center of targetable
 console.log(generator);
+console.log(generator.inRangeCenterZCoord);
+console.log(generator.blockGenerationZCoord);
+console.log(generator.movementPerSecond);
 const blockGenerationDelay = (generator.inRangeCenterZCoord - generator.blockGenerationZCoord) / generator.movementPerSecond;
+console.log(blockGenerationDelay);
 // ^^
 // can delete this once read
 // issue: time in the map causes blocks to be GENERATED at that time, not in range at that time.
@@ -35,6 +39,7 @@ function loadMap() {
     if (map.length > 0) {
         curBlock = map.at(-1);
     }
+    document.dispatchEvent(new Event("mapReady"));
     clock.start();
 }
 
@@ -48,7 +53,6 @@ function frame() {
     console.log(curLives);
     while (curBlock && curTime >= curBlock.time && curLives > 0) {
         generator.generateBlock(curBlock.x, curBlock.y, curBlock.rotation * Math.PI / 180);
-        console.log("FUCKING GENERATED A BLOCK");
         map.pop();
         if (map.length === 0) {
             console.log("EMPTY");

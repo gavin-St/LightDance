@@ -93,7 +93,7 @@ export class BlockGenerator {
     #blockGeometry;
     #blockMaterial;
     #blockDimensions; // array, [width, height, depth]
-    #blockGenerationZCoord; // radius at which to generate blocks (only used for random generation)
+    blockGenerationZCoord; // radius at which to generate blocks (only used for random generation)
     _despawnLimit; // the z coord at which blocks will despawn (to save memory)
     sceneObject;
     movementPerSecond;
@@ -103,7 +103,7 @@ export class BlockGenerator {
         this.blockArray = [];
         this.blockGenerationBorders = blockGenerationBorders;
         this.#blockDimensions = blockDimensions
-        this.#blockGenerationZCoord = blockGenerationZCoord;
+        this.blockGenerationZCoord = blockGenerationZCoord;
         this._despawnLimit = despawnLimit;
         this.movementPerSecond = movementPerSecond;
         this.#initializeBlockData(blockDimensions[0], blockDimensions[1], blockDimensions[2]);
@@ -163,7 +163,7 @@ export class BlockGenerator {
         }
         // console.log("IN GEN BLOCK");
         // console.log(this.sceneObject);
-        this.blockArray.push(new Block(this.sceneObject, new THREE.Mesh(this.#blockGeometry, this.#blockMaterial), x, y, this.#blockGenerationZCoord, rotation, direction, this.#blockDimensions[0], this.#blockDimensions[1], this.#blockDimensions[2], this._rotatePoint));
+        this.blockArray.push(new Block(this.sceneObject, new THREE.Mesh(this.#blockGeometry, this.#blockMaterial), x, y, this.blockGenerationZCoord, rotation, direction, this.#blockDimensions[0], this.#blockDimensions[1], this.#blockDimensions[2], this._rotatePoint));
         this.numCubes++;
         this.sceneObject.scene.add(this.blockArray.at(-1).mesh);
     }

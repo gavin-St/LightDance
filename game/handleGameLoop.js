@@ -27,12 +27,10 @@ document.addEventListener('generatorInitialized', function() {
         "components/light.js",
         "components/tracker.js",
         "utils/generateBlocks.js",
-        "lightTracker/findLightCoords.js"
     ];
 
     const modules = [   // Specify which scripts are modules
         "components/tracker.js",
-        "lightTracker/findLightCoords.js"
     ];
 
     scripts.forEach(scriptSrc => {
@@ -48,3 +46,10 @@ document.addEventListener('generatorInitialized', function() {
         document.body.appendChild(script);
     });
 }, {once: true});
+
+document.addEventListener('mapReady', function() {
+    const script = document.createElement('script');
+    script.src = "lightTracker/findLightCoords.js";
+    script.type = "module";
+    document.body.appendChild(script);
+}, {once: true})
