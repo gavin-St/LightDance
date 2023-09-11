@@ -106,7 +106,7 @@ export class BlockGenerator {
         this.#blockGenerationZCoord = blockGenerationZCoord;
         this._despawnLimit = despawnLimit;
         this.movementPerSecond = movementPerSecond;
-        this.#initializeBlockData();
+        this.#initializeBlockData(blockDimensions[0], blockDimensions[1], blockDimensions[2]);
     }
 
     #initializeBlockData(width = 2, height = 2, depth = 2, blockColor = 0xff0000) {
@@ -163,7 +163,7 @@ export class BlockGenerator {
         }
         // console.log("IN GEN BLOCK");
         // console.log(this.sceneObject);
-        this.blockArray.push(new Block(this.sceneObject, new THREE.Mesh(this.#blockGeometry, this.#blockMaterial), x, y, this.#blockGenerationZCoord, rotation, direction, this.#blockDimensions[0], this.#blockDimensions[0], this.#blockDimensions[0], this._rotatePoint));
+        this.blockArray.push(new Block(this.sceneObject, new THREE.Mesh(this.#blockGeometry, this.#blockMaterial), x, y, this.#blockGenerationZCoord, rotation, direction, this.#blockDimensions[0], this.#blockDimensions[1], this.#blockDimensions[2], this._rotatePoint));
         this.numCubes++;
         this.sceneObject.scene.add(this.blockArray.at(-1).mesh);
     }

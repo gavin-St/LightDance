@@ -7,7 +7,7 @@ const generationFrequency = 2000;
 let backgroundGenerator = new BlockGenerator(
     backgroundScene, // sceneObject
     {beginX: -4, endX: 4, beginY: -4, endY: 4}, // blockGenerationBorders
-    [2, 2, 2], // blockDimensions
+    [1.5, 1.5, 1.5], // blockDimensions
     -10, // blockGenerationZCoord
     10, // despawnLimit
     5 // movementPerSecond
