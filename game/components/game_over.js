@@ -3,7 +3,7 @@ document.addEventListener('gameDone', function() {
     titleElement.innerHTML = "GAME OVER"; 
     setTimeout(function() {
         window.location.href = '../';
-    }, 5000);
+    }, 10000);
 }, {once: true, capture: true});
 
 document.addEventListener('victory', function() {
@@ -11,5 +11,5 @@ document.addEventListener('victory', function() {
     titleElement.innerHTML = "YOU WIN!"; 
     setTimeout(function() {
         window.location.href = '../';
-    }, 5000);
+    }, 10000);
 }, {once: true});

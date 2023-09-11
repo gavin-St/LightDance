@@ -1,6 +1,5 @@
 let mapIndex = 0;
 
-
 function validJSON(json) {
     try {
         JSON.parse(json); // Array of Objects.
@@ -19,7 +18,10 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
 
 
 sessionStorage.setItem("Active Map", "");
-document.getElementById(`choose-map`).addEventListener("change", (e) => {
+handleMapChange();
+document.getElementById(`choose-map`).addEventListener("change", handleMapChange);
+
+function handleMapChange() {
     let mapName = document.getElementById(`choose-map`).value;
     if(mapName === "random") {
         sessionStorage.setItem("Active Map", "");
@@ -46,7 +48,7 @@ document.getElementById(`choose-map`).addEventListener("change", (e) => {
             console.log(err);
         });
     }    
-});
+}
 
 document.getElementById(`submit_map`).addEventListener("click", () => {
     const errorElement = document.getElementById("error-message");
@@ -63,7 +65,7 @@ document.getElementById(`submit_map`).addEventListener("click", () => {
     let fileread = new FileReader();
     fileread.onload = (e) => {
         let content = e.target.result;
-        console.log(typeof content);
+        // console.log(typeof content);
         if (validJSON(content)) {
             let customMaps = JSON.parse(sessionStorage.getItem("Custom Maps"));
 
