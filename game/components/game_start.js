@@ -70,7 +70,6 @@ function createVideo() {
     document.getElementById("skip").classList.add('flashing-text');
 
     document.getElementById("mini_title").innerHTML = displayLevelTitle;
-    c
     let music = new Audio(`../assets/songs/${levelTitle}.mp3`);
     music.play();
 
