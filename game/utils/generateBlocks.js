@@ -4,6 +4,7 @@ let clock = new THREE.Clock(true);
 
 // [time (sec), x, y, rotation]
 let map = sessionStorage.getItem("Active Map") ? JSON.parse(sessionStorage.getItem(sessionStorage.getItem("Active Map"))) : [];
+console.log(map);
 const degToRad = Math.PI / 180;
 
 // time it takes for block to go from spawn to center of targetable
