@@ -76,6 +76,8 @@ function playMusic() {
     });
 }
 
+playMusic();
+
 // main function to map coords
 function processCoords() {
     playMusic();
