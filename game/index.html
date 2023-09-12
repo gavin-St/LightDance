@@ -12,7 +12,7 @@
 <body>
 	<div class="debug_tools">
 		<div>
-			<a id="back_button" href="../">⮜Back</a>
+			<a id="back_button" href="../">←Back</a>
 		</div>
 		<button id="move_block" type="button" class="button0" style="display: none;">Randomly Add a Block</button>
 		<p id="cursor_coordinates" class="text0"></p>
@@ -24,7 +24,8 @@
 	</div>
 	<div class="hints">
 		<p id="explanation" class="text0">Use your phone flashlight or any other source of bright light to move your cursor. Try to stay away from bright spots in the background.</p>
-		<p id="warning" class="text0">Make sure our green circle correctly traces your movements before playing!!</p>
+		<p id="warning" class="text0">Make sure our circle correctly traces your movements before playing!!</p>
+		<p id="music" class="text0">Don't forget to turn on sound!!</p>
 		<p id="skip" class="text0" style="display: none; margin-top: 10px;">Press c to continue</p>
 	</div>
 	<div id="videos" >
@@ -35,6 +36,7 @@
 		<p id="lives_count">Lives: 10000</p>
 	</div>
 	<div class="scripts">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
 		<script>
 			let camera, renderer, generator;
 			let mainScene = {
@@ -50,7 +52,6 @@
 		<script src="utils/initializeCV.js"></script>
 		<script src="handleGameLoop.js" type="module"></script>
 		<script src="components/game_start.js" type="module"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
 		<script src="components/game_over.js" type = "module"></script>
 		<script src="components/block.js" type="module"></script>
 	</div>
