@@ -194,10 +194,10 @@ function createVideo() {
                 src.delete();
                 dst.delete();
                 gray.delete();
-                const hint1 = document.getElementById("explanation");
-                hint1.innerHTML = "";
-                const hint2 = document.getElementById("warning");
-                hint2.innerHTML = "";
+                document.getElementById("explanation").innerHTML = "";
+                document.getElementById("warning").innerHTML = "";
+                document.getElementById("music").innerHTML = "";
+
                 const c = document.getElementById("skip");
                 c.innerHTML = "Press c to toggle mini-cam";
                 c.style.position = 'fixed';
