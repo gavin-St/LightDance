@@ -1,5 +1,20 @@
 import { getX, getY } from "../utils/getWorldCoordinates.js";
 
+const slice_sound = new Audio('../../assets/sounds/slice_effect2.mp3');
+// slice_sound.play();
+console.log(slice_sound);
+function sliceEffect() {
+    var clone = slice_sound.cloneNode();
+    clone.play();
+  }
+// sliceEffect();
+// function repeatEveryTwoSeconds() {
+//     sliceEffect();
+
+//     setTimeout(repeatEveryTwoSeconds, 1500); // 2000 milliseconds = 2 seconds
+// }
+// repeatEveryTwoSeconds();
+
 export class Block {
     targetSquare;
     constructor(sceneObject, mesh, x, y, z, rotation, direction, width, height, depth, rotatePoint) {
@@ -183,7 +198,8 @@ export class BlockGenerator {
         }
     }
     // destroys the block at index
-    destroyBlock(index) {
+    destroyBlock(index, soundEffect=true) {
+        if (soundEffect) sliceEffect();
         this.sceneObject.scene.remove(this.blockArray[index].targetSquare);
         this.sceneObject.scene.remove(this.blockArray[index].indicator);
         this.sceneObject.scene.remove(this.blockArray[index].mesh);
@@ -194,7 +210,7 @@ export class BlockGenerator {
     destroyPastBlocks() {
         for (let i = 0; i < this.numCubes; i++) {
             if (this.blockArray[i].zCoord > this._despawnLimit) {
-                this.destroyBlock(i);
+                this.destroyBlock(i, false);
             }
         }
     }
@@ -214,8 +230,8 @@ export class BreakableBlockGenerator extends BlockGenerator {
         this.#endInRange = inRangeCenterZCoord + inRangeRadius;
         this.#errorMargin = errorMargin;
     }
-    destroyBlockAndTrack(index) {
-        this.destroyBlock(index)
+    destroyBlockAndTrack(index, sound) {
+        this.destroyBlock(index, sound)
         totalDestroyed++;
         if(totalDestroyed === mapLength) {
             const gameDoneEvent = new Event('victory');
@@ -226,7 +242,7 @@ export class BreakableBlockGenerator extends BlockGenerator {
     destroyPastBlocksAndTrack() {
         for (let i = 0; i < this.numCubes; i++) {
             if (this.blockArray[i].zCoord > this._despawnLimit) {
-                this.destroyBlockAndTrack(i);
+                this.destroyBlockAndTrack(i, false);
             }
         }
     }
