@@ -1,8 +1,8 @@
 # Light Dance
 
-Live at https://uncreativename1.github.io/LightDance/
+Live at [https://uncreativename1.github.io/LightDance/](https://uncreativename1.github.io/LightDance/).
 
-Light Dance is a recreation of the VR rhythm game [Beat Saber](https://beatsaber.com/) using OpenCV and Three.js. In Beat Saber, VR controllers are used to slice through blocks that are synchronized to the beat of music. Also, there are arrow indicators that tell you which direction to slice each block. In Light Dance, we replaced the VR controllers with OpenCV motion sensors, creating a version of Beat Saber that does not require the use of VR. Instead, all that is needed is any flashlight, such as your mobile phone's flashlight, and a webcam on your computer. We use computer vision to detect where the light is on the flashlight, and you can use your flashlight to slice through blocks!
+Light Dance is a recreation of the VR rhythm game [Beat Saber](https://beatsaber.com/) using OpenCV and Three.js. In Beat Saber, a VR headset and controllers are used to slice through blocks that are synchronized to the beat of music. In Light Dance, we replaced the VR controllers with OpenCV motion sensors, creating the familiar rhythym game feel without the need of expensive VR equipment! Instead, all you need is any flashlight, such as your mobile phone's flashlight, and a webcam on your computer to slice through blocks satisfyingly.
 
 ## Video Demo
 
