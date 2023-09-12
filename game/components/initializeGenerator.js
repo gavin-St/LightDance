@@ -12,7 +12,7 @@ generator = new BreakableBlockGenerator(
     10, // despawnLimit
     5, // movementPerSecond (in world coords)
     0, // inRangeCenterZCoord
-    1, // inRangeRadius
+    2, // inRangeRadius
     0.05 // errorMargin
 );
 
