@@ -8,6 +8,7 @@
 	<title>Document</title>
 	<link rel="stylesheet" href="index.css"> 
 	<script async src="lightTracker/opencv.js" onload="initializeCV()"></script>
+	<script async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
 </head>
 <body>
 	<div class="debug_tools">
@@ -36,7 +37,6 @@
 		<p id="lives_count">Lives: 10000</p>
 	</div>
 	<div class="scripts">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
 		<script>
 			let camera, renderer, generator;
 			let mainScene = {
@@ -49,11 +49,10 @@
 			if (levelTitle) levelTitle = levelTitle.slice(0, -5);
 			let mapLength = (levelTitle ? JSON.parse(sessionStorage.getItem(levelTitle + ".json")) : []).length;
 		</script>
-		<script src="utils/initializeCV.js"></script>
+		<script src="components/block.js" type="module"></script>
 		<script src="handleGameLoop.js" type="module"></script>
 		<script src="components/game_start.js" type="module"></script>
 		<script src="components/game_over.js" type = "module"></script>
-		<script src="components/block.js" type="module"></script>
 	</div>
 </body>
 </html>

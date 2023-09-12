@@ -69,7 +69,7 @@ function playMusic() {
 
         // Start playback at a specific time (e.g., 2 seconds into the context's lifetime)
         console.log(blockGenerationDelay);
-        source.start(context.currentTime + blockGenerationDelay);
+        source.start(context.currentTime + blockGenerationDelay - 0.1);
     })
     .catch(err => {
         console.error('Error with decoding audio data', err);
@@ -79,9 +79,7 @@ function playMusic() {
 playMusic();
 
 // main function to map coords
-function processCoords() {
-    playMusic();
-    
+function processCoords() {    
     let video = document.getElementById("cam_input");
     console.log(video);
     video.width = window.innerWidth / 4;
