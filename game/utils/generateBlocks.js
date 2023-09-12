@@ -68,5 +68,3 @@ function frame() {
 loadMap();
 
 frame();
-
-

@@ -48,23 +48,7 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// main function to map coords
-function processCoords() {
-    console.log('OpenCV is now ready!');
-    let video = document.getElementById("cam_input");
-    console.log(video);
-    video.width = window.innerWidth / 4;
-    video.height = window.innerHeight / 4;
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-    .then(function(stream) {
-        video.srcObject = stream;
-        video.play();
-    })
-    .catch(function(err) {
-        console.log("An error occurred! " + err);
-    });
-    // console.log(cv);
-    
+function playMusic() {
     // Music logic
     let songUrl;
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -84,14 +68,32 @@ function processCoords() {
         source.connect(context.destination);
 
         // Start playback at a specific time (e.g., 2 seconds into the context's lifetime)
-        console.log("hello there");
         console.log(blockGenerationDelay);
         source.start(context.currentTime + blockGenerationDelay);
     })
     .catch(err => {
         console.error('Error with decoding audio data', err);
     });
+}
 
+// main function to map coords
+function processCoords() {
+    playMusic();
+    
+    let video = document.getElementById("cam_input");
+    console.log(video);
+    video.width = window.innerWidth / 4;
+    video.height = window.innerHeight / 4;
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    .then(function(stream) {
+        video.srcObject = stream;
+        video.play();
+    })
+    .catch(function(err) {
+        console.log("An error occurred! " + err);
+    });
+    // console.log(cv);
+    
 
     color = new cv.Scalar(0, 255, 0, 255);
 
