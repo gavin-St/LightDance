@@ -1,6 +1,6 @@
 import { getX, getY } from "../utils/getWorldCoordinates.js";
 
-const slice_sound = new Audio('../../assets/sounds/slice_effect2.mp3');
+const slice_sound = new Audio('../../assets/sounds/slice_effect4.mp3');
 // slice_sound.play();
 console.log(slice_sound);
 function sliceEffect() {
@@ -72,9 +72,9 @@ export class Block {
         const topRight = this.rotatePoint(centerX + this.width / 2 - this.width / 10, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z);
 
         const triangleGeometry = new THREE.Geometry();
-        var v1 = new THREE.Vector3(topLeft[0], topLeft[1], this.mesh.position.z + 1.01);
-        var v2 = new THREE.Vector3(topRight[0], topRight[1], this.mesh.position.z + 1.01);
-        var v3 = new THREE.Vector3(centerX, centerY, this.mesh.position.z + 1.01);
+        var v1 = new THREE.Vector3(topLeft[0], topLeft[1], this.mesh.position.z + this.depth/2 + 0.04);
+        var v2 = new THREE.Vector3(topRight[0], topRight[1], this.mesh.position.z + this.depth/2 + 0.04);
+        var v3 = new THREE.Vector3(centerX, centerY, this.mesh.position.z + this.depth/2 + 0.04);
         triangleGeometry.vertices.push( v1 );
         triangleGeometry.vertices.push( v2 );
         triangleGeometry.vertices.push( v3 );
@@ -319,7 +319,7 @@ export class BreakableBlockGenerator extends BlockGenerator {
                 if(this.blockArray[i].mesh.material.color.g) {
                     const lifeElement = document.getElementById('lives_count');
                     const curLives = parseInt(lifeElement.textContent.split(' ')[1]);
-                    lifeElement.textContent = `Lives: ${curLives - 1}`;
+                    lifeElement.textContent = `Score: ${curLives - 1}`;
                     if(curLives === 1) {
                         setInterval(() => {
                             this.blockArray[i].length = 0;
