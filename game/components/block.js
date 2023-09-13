@@ -72,9 +72,11 @@ export class Block {
         const topRight = this.rotatePoint(centerX + this.width / 2 - this.width / 10, centerY + this.height / 2, centerX, centerY, this.mesh.rotation.z);
 
         const triangleGeometry = new THREE.Geometry();
-        var v1 = new THREE.Vector3(topLeft[0], topLeft[1], this.mesh.position.z + this.depth/2 + 0.04);
-        var v2 = new THREE.Vector3(topRight[0], topRight[1], this.mesh.position.z + this.depth/2 + 0.04);
-        var v3 = new THREE.Vector3(centerX, centerY, this.mesh.position.z + this.depth/2 + 0.04);
+
+        const addDepth = this.depth / 2 + 0.01;
+        var v1 = new THREE.Vector3(topLeft[0], topLeft[1], this.mesh.position.z + addDepth);
+        var v2 = new THREE.Vector3(topRight[0], topRight[1], this.mesh.position.z + addDepth);
+        var v3 = new THREE.Vector3(centerX, centerY, this.mesh.position.z + addDepth);
         triangleGeometry.vertices.push( v1 );
         triangleGeometry.vertices.push( v2 );
         triangleGeometry.vertices.push( v3 );
