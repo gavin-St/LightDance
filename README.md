@@ -6,6 +6,8 @@ Light Dance is a recreation of the VR rhythm game [Beat Saber](https://beatsaber
 
 ## Video Demo
 
+![Demo](/assets/LightDanceDemo.mp4)
+
 ## Map Upload
 
 Light Dance has the functionality of adding custom maps. On the home screen, you will see the option to add a map. All you need to do is provide a name for the map and a valid map file, then click submit when you are ready.
