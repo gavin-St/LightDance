@@ -1,6 +1,12 @@
 import { getX, getY } from "../utils/getWorldCoordinates.js";
 
-const slice_sound = new Audio('../../assets/sounds/slice_effect4.mp3');
+let baseURL;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    baseURL = '/';
+} else {
+    baseURL = '/LightDance/';
+}
+const slice_sound = new Audio(baseURL + 'assets/sounds/slice_effect4.mp3');
 // slice_sound.play();
 console.log(slice_sound);
 function sliceEffect() {
