@@ -15,8 +15,8 @@ Light Dance has the functionality of adding custom maps. On the home screen, you
 The map file should be an array of block objects. Each object has the property time, x, y, and rotation.
 
 - **Time:** The time in seconds that the block should appear on the screen.
-- **x:** The x position on the screen that the block should appear. The center of the screen is x = 0, and going left to right increases the x value. x is bounded by [-5, 5].
-- **y:** The y position on the screen that the block should appear. The center of the screen is y = 0, and going bottom to top increases the y value. y is bounded by [-5, 5].
+- **x:** The x position on the screen that the block should appear. The center of the screen is x = 0, and going left to right increases the x value. x is bounded by [-4, 4] by default.
+- **y:** The y position on the screen that the block should appear. The center of the screen is y = 0, and going bottom to top increases the y value. y is bounded by [-4, 4] by default.
 - **Rotation:** The rotation of the block in degrees. The value provided will rotate the block counterclockwise.
 
 ### Example of a Valid File
