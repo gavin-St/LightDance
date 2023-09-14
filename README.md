@@ -6,7 +6,7 @@ Light Dance is a recreation of the VR rhythm game [Beat Saber](https://beatsaber
 
 ## Video Demo
 
-![Demo](/assets/LightDanceDemo.mov)
+[![Demo](/assets/DemoThumbnail.png)](https://youtu.be/Tqpk-4Ache8)
 
 ## Map Upload
 
