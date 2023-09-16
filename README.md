@@ -2,7 +2,7 @@
 
 Live at [https://gavin-St.github.io/LightDance/](https://gavin-St.github.io/LightDance/).
 
-## Video Demo (CLick)
+## Video Demo (Click)
 
 [![Demo](/assets/DemoThumbnail.png)](https://youtu.be/Tqpk-4Ache8)
 
