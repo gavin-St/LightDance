@@ -57,8 +57,6 @@ function frame() {
         if (map.length === 0) {
             console.log("EMPTY");
             curBlock = null;
-            noMoreBLocks = true;
-            console.log("no more blocks");
             break;
         }
         curBlock = map.at(-1);

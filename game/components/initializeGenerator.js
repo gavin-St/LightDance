@@ -46,7 +46,7 @@ function animate() {
 }
 
 // standard move speed is 5 in-game units per second (we move once per 1/100 seconds or 10ms)
-setInterval(() => {generator.moveAllCubes(generator.movementPerSecond / 100)}, 10);
+setInterval(() => {generator.moveAllCubes(generator.movementPerSecond / 20)}, 50);
 
 makeBlockButton.addEventListener('click', randomlyGenerateBlock);
 animate();
