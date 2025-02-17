@@ -17,20 +17,23 @@
 } */
 @keyframes glitchEffect {
 	0% {
-	  text-shadow: 2px 2px #6edbc5, -2px -2px #ff0000;
+	  text-shadow: 4px 4px #6edbc5, -4px -4px #ff0000;
 	}
-	25% {
-	  text-shadow: -2px -2px #6edbc5, 2px 2px #ff0000;
+	20% {
+	  text-shadow: -0px -0px #6edbc5, 0px 0px #ff0000;
 	}
-	50% {
-	  text-shadow: 2px 2px #6edbc5, -2px -2px #ff0000;
+	40% {
+	  text-shadow: -4px 4px #6edbc5, 4px -4px #ff0000;
 	}
-	75% {
-	  text-shadow: -2px 2px #6edbc5, 2px -2px #ff0000;
+	60% {
+	  text-shadow: -0px 0px #6edbc5, 0px -0px #ff0000;
+	}
+	80% {
+	  text-shadow: -4px -4px #6edbc5, 4px 4px #ff0000;
 	}
 	100% {
-	  text-shadow: 2px 2px #6edbc5, -2px -2px #ff0000;
-	}
+		text-shadow: -0px 0px #6edbc5, 0px -0px #ff0000;
+	  }
   }
 #title {
 	position: absolute;
@@ -173,6 +176,8 @@ button {
     bottom: 10px;
     left: 10px;
     z-index: 1000;
+	display: flex;
+	flex-direction: column;
 }
 
 #github-link img {
@@ -182,6 +187,13 @@ button {
 
 #credits {
 	font-family: "Azonix", sans-serif;
-	font-size: 10px;
-	display: none;
+	font-size: 15px;
+	display: block;
+	color: white;
+	position: fixed;
+    bottom: 0px;
+    left: 44px;
+    z-index: 1000;
+	display: flex;
+	flex-direction: column;
 }
