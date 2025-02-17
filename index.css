@@ -170,14 +170,14 @@ button {
 
 #github-link {
     position: fixed;
-    bottom: 10px;     /* Adjust as needed */
-    left: 10px;   /* Adjust as needed */
-    z-index: 1000; /* Ensure it's above other elements */
+    bottom: 10px;
+    left: 10px;
+    z-index: 1000;
 }
 
 #github-link img {
-    width: 27.2px !important;   /* Adjust as needed */
-    height: 26px !important;  /* Adjust as needed */
+    width: 27.2px !important;
+    height: 26px !important;
 }
 
 #credits {
