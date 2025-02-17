@@ -191,7 +191,7 @@ button {
 	display: block;
 	color: white;
 	position: fixed;
-    bottom: 0px;
+    bottom: -4px;
     left: 44px;
     z-index: 1000;
 	display: flex;
